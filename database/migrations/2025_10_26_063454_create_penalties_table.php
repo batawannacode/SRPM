@@ -19,7 +19,7 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
             $table->date('due_date');
-            $table->decimal('amount', 10, 2);
+            $table->decimal('amount', 65, 2);
             $table->string('reason')->nullable();
             $table->boolean('is_paid')->default(false);
             $table->timestamps();

@@ -18,6 +18,7 @@ return new class extends Migration
                 ->constrained('users')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+            $table->integer('active_property')->nullable();
             $table->timestamps();
         });
     }

@@ -25,6 +25,15 @@ class Penalty extends Model
     ];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'due_date' => 'datetime',
+    ];
+
+    /**
      * Get the lease that owns the penalty.
      */
     public function lease(): BelongsTo

@@ -11,9 +11,10 @@
         'bottom-left' => 'bottom-0 left-0 pl-4 pb-4',
         'top-right' => 'top-0 right-0 pr-4 pt-4',
         'top-left' => 'top-0 left-0 pl-4 pt-4',
+        'top-center' => 'top-0 left-1/2 transform -translate-x-1/2 pt-4',
         default => 'bottom-0 right-0 pr-4 pb-4'
     };
-    
+
     $sessionToast = session()->pull('notify');
 
     $isAlignmentsToBottom = Str::startsWith($position, 'bottom');
@@ -53,7 +54,7 @@
         },
 
         init() {
-            // used for toasts used after redirect..., any backend toast. 
+            // used for toasts used after redirect..., any backend toast.
             if(@js(filled($sessionToast))){
                 const toast = @js($sessionToast);
                 this.addToast(toast);
@@ -71,7 +72,7 @@
                 showProgress: details.showProgress !== false
             };
 
-            this.toasts.unshift(toast); 
+            this.toasts.unshift(toast);
 
             // Limit number of toasts
             if (this.toasts.length > this.maxToasts) {
@@ -86,9 +87,9 @@
 
         pauseFromToast(targetId) {
             const targetIndex = this.toasts.findIndex(toast => toast.id === targetId);
-            
+
             if (targetIndex === -1) return;
-            
+
             // Pause the target toast and all toasts above it (index 0 to targetIndex)
             this.pausedToastIds.clear();
 

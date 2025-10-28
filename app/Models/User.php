@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Spatie\Permission\Traits\HasRoles;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +27,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
+        'email_verified_at',
     ];
 
     /**
@@ -52,14 +56,43 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the user's initials
+     * @return Attribute<string, void>
      */
-    public function initials(): string
+    public function fullName(): Attribute
     {
-        return Str::of($this->name)
-            ->explode(' ')
-            ->take(2)
-            ->map(fn ($word) => Str::substr($word, 0, 1))
-            ->implode('');
+        return Attribute::make(
+            get: function ($value, array $attributes) {
+                $firstName = $attributes['first_name'];
+                $middleName = $attributes['middle_name'] ?? null;
+                $lastName = $attributes['last_name'];
+
+                if (! empty($middleName) && is_string($middleName)) {
+                    $middleName = mb_strtoupper($middleName[0]).'.';
+                }
+
+                return Str::of($firstName)
+                    ->append(' ')
+                    ->append($middleName ? $middleName.' ' : '')
+                    ->append($lastName)
+                    ->trim()
+                    ->toString();
+            },
+        );
+    }
+
+    /**
+     * Get the owner profile associated with the user.
+     */
+    public function owner(): HasOne
+    {
+        return $this->hasOne(Owner::class);
+    }
+
+    /**
+     * Get the tenant profile associated with the user.
+     */
+    public function tenant(): HasOne
+    {
+        return $this->hasOne(Tenant::class);
     }
 }

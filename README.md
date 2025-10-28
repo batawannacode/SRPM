@@ -31,10 +31,10 @@ This system provides a **centralized platform** for managing buildings, tenants,
 
 | Layer              | Technology                                  |
 | ------------------ | ------------------------------------------- |
-| **Framework**      | Laravel 11                                  |
+| **Framework**      | Laravel 12                                  |
 | **Database**       | MySQL                                       |
 | **Frontend**       | Blade / Livewire / Alpine.js                |
-| **CSS Framework**  | Tailwind CSS                                |
+| **CSS Framework**  | Tailwind CSS v4                             |
 | **Authentication** | Laravel Breeze / Fortify                    |
 | **Charts**         | Chart.js or ApexCharts                      |
 | **Payments**       | GCash API / E-Wallet Integration            |

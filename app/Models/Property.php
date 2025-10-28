@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
 class Property extends Model
@@ -23,6 +24,7 @@ class Property extends Model
         'total_units',
     ];
 
+
     /**
      * Get the owner that owns the property.
      */
@@ -30,4 +32,21 @@ class Property extends Model
     {
         return $this->belongsTo(Owner::class);
     }
+
+    /**
+     * Get the units for the property.
+     */
+    public function units(): HasMany
+    {
+        return $this->hasMany(Unit::class);
+    }
+
+    /**
+     * Get the expenses for the property.
+     */
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(Expense::class);
+    }
+
 }

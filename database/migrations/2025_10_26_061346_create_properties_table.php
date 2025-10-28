@@ -20,7 +20,6 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->string('name');
             $table->string('address');
-            $table->text('description')->nullable();
             $table->integer('total_units')->default(0);
             $table->timestamps();
         });

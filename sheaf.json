@@ -3,6 +3,75 @@
     "components": {
         "toast": {
             "installationTime": 1761462286
+        },
+        "modal": {
+            "installationTime": 1761473098
+        },
+        "avatar": {
+            "installationTime": 1761473157
+        },
+        "button": {
+            "installationTime": 1761473178
+        },
+        "icon": {
+            "installationTime": 1761473183
+        },
+        "card": {
+            "installationTime": 1761473206
+        },
+        "error": {
+            "installationTime": 1761473218
+        },
+        "field": {
+            "installationTime": 1761473230
+        },
+        "fieldset": {
+            "installationTime": 1761621709
+        },
+        "input": {
+            "installationTime": 1761473288
+        },
+        "label": {
+            "installationTime": 1761473299
+        },
+        "select": {
+            "installationTime": 1761646707
+        },
+        "popup": {
+            "installationTime": 1761646707
+        },
+        "text": {
+            "installationTime": 1761646715
+        },
+        "switch": {
+            "installationTime": 1761473332
+        },
+        "theme-switcher": {
+            "installationTime": 1761484646
+        },
+        "dropdown": {
+            "installationTime": 1761473344
+        },
+        "separator": {
+            "installationTime": 1761473391
+        },
+        "tooltip": {
+            "installationTime": 1761473687
+        },
+        "checkbox": {
+            "installationTime": 1761475829
+        },
+        "link": {
+            "installationTime": 1761476908
+        },
+        "description": {
+            "installationTime": 1761490358
+        },
+        "brand": {
+            "installationTime": 1761549561
+        },
+        "badge": {
+            "installationTime": 1761565988
         }
     }
 }

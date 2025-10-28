@@ -24,7 +24,7 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
             $table->date('payment_date');
-            $table->decimal('amount', 10, 2);
+            $table->decimal('amount', 65, 2);
             $table->string('payment_method'); // GCash, bank, e-wallet
             $table->string('account_name');
             $table->string('account_number');

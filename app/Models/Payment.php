@@ -30,6 +30,15 @@ class Payment extends Model
     ];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'payment_date' => 'datetime',
+    ];
+
+    /**
      * Get the lease that owns the payment.
      */
     public function lease(): BelongsTo
