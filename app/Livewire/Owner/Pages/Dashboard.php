@@ -15,10 +15,17 @@ class Dashboard extends Component
 {
     use HasToast;
 
+    public string $startDate = '';
+    public string $endDate = '';
     public string $filterPeriodIncome = 'monthly';
-    public string $filterPeriodVacancy = 'monthly';
 
-    /**
+    public function mount(): void
+    {
+        $this->startDate = \Carbon\Carbon::now()->startOfYear()->toDateString(); // Jan 01 of this year
+        $this->endDate = \Carbon\Carbon::now()->endOfYear()->toDateString();     // Dec 31 of this year
+    }
+
+     /**
      * === Handle Income Chart Filter (monthly/yearly) ===
      */
     public function updatedFilterPeriodIncome(string $period)
@@ -30,67 +37,66 @@ class Dashboard extends Component
         $this->dispatch('update-income-chart', data: $chartData);
     }
 
-    /**
-     * === Handle Vacancy Chart Filter (monthly/yearly) ===
-     */
-    public function updatedFilterPeriodVacancy(string $period)
+   public function render()
     {
         $owner = auth()->user()->owner;
         $property = Property::find($owner->active_property);
 
-        $chartData = $this->getVacancyData($property, $period);
-        $this->dispatch('update-vacancy-chart', data: $chartData);
-    }
+        // Convert date range to Carbon instances (optional filters)
+        $start = $this->startDate ? \Carbon\Carbon::parse($this->startDate)->startOfDay() : null;
+        $end = $this->endDate ? \Carbon\Carbon::parse($this->endDate)->endOfDay() : null;
 
-    public function render()
-    {
-        $owner = auth()->user()->owner;
-        $property = Property::find($owner->active_property);
-
-        // === Recent Activity ===
+        // === Recent Activity (Filtered by Date) ===
         $recentPayments = Payment::with('tenant')
             ->where('status', 'paid')
             ->whereHas('lease.unit', fn($q) => $q->where('property_id', $property->id))
+            ->when($start && $end, fn($q) => $q->whereBetween('payment_date', [$start, $end]))
             ->latest()
             ->take(5)
             ->get();
 
         $recentRequests = Request::whereHas('unit', fn($q) => $q->where('property_id', $property->id))
+            ->when($start && $end, fn($q) => $q->whereBetween('created_at', [$start, $end]))
             ->latest()
             ->take(5)
             ->get();
 
-        // === Statistics ===
-        $totalIncome = $property->units
-            ->flatMap->leases
-            ->flatMap->payments
-            ->where('status', 'paid')
+        $expensesLists = Expense::where('property_id', $property->id)
+            ->when($start && $end, fn($q) => $q->whereBetween('created_at', [$start, $end]))
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        // === Statistics (Filtered by Date Range) ===
+        $totalIncome = Payment::where('status', 'paid')
+            ->whereHas('lease.unit', fn($q) => $q->where('property_id', $property->id))
+            ->when($start && $end, fn($q) => $q->whereBetween('payment_date', [$start, $end]))
             ->sum('amount');
-        $totalExpenses = $property->expenses
+
+        $totalExpenses = Expense::where('property_id', $property->id)
+            ->when($start && $end, fn($q) => $q->whereBetween('created_at', [$start, $end]))
             ->sum('amount');
 
         $totalRevenue = $totalIncome - $totalExpenses;
         $isRevenueHigher = $totalRevenue > $totalExpenses;
-        $totalUnits = $property->units()->count();
-        $occupiedUnits = $property->units()->where('status', 'occupied')->count();
-        $maintenanceUnits = $property->units()->where('status', 'maintenance')->count();
-        $vacantUnits = $property->units()->where('status', 'vacant')->count();
+
+        // === Unit Statistics (by status within date range) ===
+        $unitQuery = $property->units();
+        if ($start && $end) {
+            $unitQuery->whereBetween('created_at', [$start, $end]);
+        }
+
+        $totalUnits = $unitQuery->count();
+        $occupiedUnits = (clone $unitQuery)->where('status', 'occupied')->count();
+        $maintenanceUnits = (clone $unitQuery)->where('status', 'maintenance')->count();
+        $vacantUnits = (clone $unitQuery)->where('status', 'vacant')->count();
 
         $vacancyChart = [
             'labels' => ['Occupied', 'Maintenance', 'Vacant'],
             'series' => [$occupiedUnits, $maintenanceUnits, $vacantUnits],
         ];
 
-        // === Payment-based Occupancy Rate ===
-        $unitsWithPayments = $property->units()
-            ->whereHas('leases.payments', fn($q) => $q->where('status', 'paid'))
-            ->count();
-
-        $paymentOccupancyRate = $totalUnits > 0
-            ? round(($unitsWithPayments / $totalUnits) * 100, 2)
-            : 0;
-
-        // === Monthly Income Data ===
+          // === Monthly Income Data ===
         $monthlyIncome = Payment::selectRaw('MONTH(payment_date) as month, SUM(amount) as total')
             ->where('status', 'paid')
             ->whereHas('lease.unit', fn($q) => $q->where('property_id', $property->id))
@@ -134,22 +140,20 @@ class Dashboard extends Component
             ],
         ];
 
-
         return view('livewire.owner.pages.dashboard', compact(
             'recentPayments',
             'recentRequests',
+            'expensesLists',
             'totalIncome',
             'totalExpenses',
             'totalUnits',
             'totalRevenue',
             'isRevenueHigher',
             'vacancyChart',
-            'paymentOccupancyRate',
             'maintenanceUnits',
             'expenseChartData'
         ));
     }
-
 
     /**
      * === Helper: Monthly or Yearly Data Grouping ===
@@ -221,42 +225,6 @@ class Dashboard extends Component
                 ['label' => 'Income', 'data' => $incomeData],
                 ['label' => 'Expenses', 'data' => $expenseData],
             ],
-        ];
-    }
-
-    /**
-     * === Helper: Vacancy chart data ===
-     */
-    protected function getVacancyData(Property $property, string $period): array
-    {
-        $now = now();
-
-        if ($period === 'yearly') {
-            $labels = range($now->year - 4, $now->year); // Last 5 years (for trend)
-            $series = [];
-
-            foreach ($labels as $year) {
-                $occupied = $property->units()->where('status', 'occupied')->count();
-                $maintenance = $property->units()->where('status', 'maintenance')->count();
-                $vacant = $property->units()->where('status', 'vacant')->count();
-
-                $series[$year] = [$occupied, $maintenance, $vacant];
-            }
-
-            return [
-                'labels' => ['Occupied', 'Maintenance', 'Vacant'],
-                'datasets' => $series,
-            ];
-        }
-
-        // Monthly (current snapshot only)
-        $occupied = $property->units()->where('status', 'occupied')->count();
-        $maintenance = $property->units()->where('status', 'maintenance')->count();
-        $vacant = $property->units()->where('status', 'vacant')->count();
-
-        return [
-            'labels' => ['Occupied', 'Maintenance', 'Vacant'],
-            'series' => [$occupied, $maintenance, $vacant],
         ];
     }
 

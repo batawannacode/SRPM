@@ -217,6 +217,7 @@
     <template x-teleport="body">
         <div
             x-show="isOpen"
+            x-cloak
             class="fixed inset-0  overflow-y-auto"
             aria-modal="true"
             role="dialog"

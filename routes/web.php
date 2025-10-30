@@ -3,11 +3,18 @@
 use App\Enums\Role;
 use App\Http\Controllers\HomeRouteController;
 use App\Livewire\Actions\Logout;
+// Tenant
 use App\Livewire\Tenant\Auth\Login as TenantLogin;
 use App\Livewire\Tenant\Auth\Register as TenantRegister;
+// Owner
+use App\Livewire\Owner\Common\Settings;
 use App\Livewire\Owner\Auth\Login as OwnerLogin;
 use App\Livewire\Owner\Auth\Register as OwnerRegister;
 use App\Livewire\Owner\Pages\Dashboard as OwnerDashboard;
+use App\Livewire\Owner\Pages\Leases;
+use App\Livewire\Owner\Pages\Expenses;
+use App\Livewire\Owner\Pages\Payments as OwnerPayments;
+use App\Livewire\Owner\Pages\Requests as OwnerRequests;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -86,6 +93,21 @@ Route::group([
         // DASHBOARD
         Route::get('dashboard', OwnerDashboard::class)
             ->name('dashboard');
+        // LEASES
+        Route::get('leases', Leases::class)
+            ->name('leases');
+        // EXPENSES
+        Route::get('expenses', Expenses::class)
+            ->name('expenses');
+        // PAYMENTS
+        Route::get('payments', OwnerPayments::class)
+            ->name('payments');
+        // REQUESTS
+        Route::get('requests', OwnerRequests::class)
+            ->name('requests');
+        // SETTINGS
+        Route::get('settings', Settings::class)
+            ->name('settings');
 
         /*
         *-----------------------------------------

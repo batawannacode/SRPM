@@ -28,7 +28,17 @@
             <livewire:common.notifications/>
 
             {{-- PROFILE --}}
-            <x-ui.avatar name="{{ $user->fullName }}" color="auto" size="md" circle />
+            <div class="flex items-center gap-2">
+                @if($user->avatar_path)
+                <x-ui.avatar name="{{ $user->fullName }}" color="auto" size="md" circle :src="asset('storage/'.$user->avatar_path)" />
+                @else
+                <x-ui.avatar name="{{ $user->fullName }}" color="auto" size="md" circle />
+                @endif
+                <div class="hidden sm:flex flex-col">
+                    <span class=" text-sm font-medium text-neutral-700 dark:text-neutral-200 ">{{ $user->fullName }}</span>
+                    <span class=" text-xs font-medium text-neutral-500 dark:text-neutral-400 ">{{ $user->email }}</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

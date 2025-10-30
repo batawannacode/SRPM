@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -32,6 +33,15 @@ class AppServiceProvider extends ServiceProvider
                     ]);
                 }
             }
+        });
+
+        // Password Requirement
+        Password::defaults(function () {
+            return Password::min(8)
+                ->letters()
+                ->mixedCase()
+                ->numbers()
+                ->symbols();
         });
     }
 }

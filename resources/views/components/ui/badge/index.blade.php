@@ -31,7 +31,7 @@
         };
     } else {
         $colorClasses = match ($color) {
-            default => 'text-white dark:text-white bg-neutral-900 dark:bg-neutral-600 border-black/5 dark:border-white/5',
+            default => 'text-neutral-600 dark:text-white bg-neutral-200 dark:bg-neutral-600 border-black/5 dark:border-white/5',
             'red' => 'text-white dark:text-white bg-red-500 dark:bg-red-500 border-red-400 dark:border-red-400/90',
             'orange' => 'text-white dark:text-white bg-orange-400 dark:bg-orange-400 border-orange-400 dark:border-orange-400/90',
             'amber' => 'text-amber-800 bg-amber-100 dark:bg-amber-200 border-amber-400 dark:border-amber-400/90',
@@ -41,7 +41,7 @@
             'emerald' => 'text-emerald-800 bg-emerald-100 dark:bg-emerald-200 border-emerald-400 dark:border-emerald-400/90',
             'teal' => 'text-white dark:text-white bg-teal-400 dark:bg-teal-400 border-teal-400 dark:border-teal-400/90',
             'cyan' => 'text-white dark:text-white bg-cyan-400 dark:bg-cyan-400 border-cyan-400 dark:border-cyan-400/90',
-            'sky' => 'text-white dark:text-white bg-sky-400 dark:bg-sky-400 border-sky-400 dark:border-sky-400/90',
+            'sky' => 'text-sky-800 bg-sky-300 border-sky-400 dark:border-sky-400/90',
             'blue' => 'text-white dark:text-white bg-blue-400 dark:bg-blue-400 border-blue-400 dark:border-blue-400/90',
             'indigo' => 'text-white dark:text-white bg-indigo-400 dark:bg-indigo-400 border-indigo-400 dark:border-indigo-400/90',
             'violet' => 'text-white dark:text-white bg-violet-400 dark:bg-violet-400 border-violet-400 dark:border-violet-400/90',

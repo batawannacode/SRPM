@@ -19,7 +19,7 @@
                 {{-- Header --}}
                 <x-owner.header :title="$title" />
                 {{-- Content --}}
-                <main class="relative md:p-8 p-4 overflow-y-auto scroll-smooth w-full h-[calc(100vh_-_70px)]">
+                <main class="relative md:p-8 p-4 overflow-y-auto scroll-smooth w-full h-[calc(100vh-70px)]">
                     {{ $slot }}
                 </main>
             </div>

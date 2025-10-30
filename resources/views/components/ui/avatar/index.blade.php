@@ -76,9 +76,10 @@
     $avatarSize = match ($size) {
         'xl' => '[:where(&)]:size-16 [:where(&)]:text-base',
         'lg' => '[:where(&)]:size-12 [:where(&)]:text-base',
-        default => '[:where(&)]:size-10 [:where(&)]:text-sm',
         'sm' => '[:where(&)]:size-8 [:where(&)]:text-sm',
         'xs' => '[:where(&)]:size-6 [:where(&)]:text-xs',
+        'full' => 'h-32 w-32 text-4xl rounded-full',
+        default => '[:where(&)]:size-10 [:where(&)]:text-sm'
     };
 
     $avatarColor = match ($color) {
@@ -181,7 +182,7 @@
 <div class="relative w-fit" data-slot="avatar" data-size="{{ $avatarSize }}">
     <x-ui.button.abstract :href="$href" :as="$as" {{ $attributes->class(Arr::toCssClasses($classes)) }}>
         @if ($src)
-            <img src="{{ $src }}" alt="{{ $alt || $name }}">
+            <img src="{{ $src }}" alt="{{ $alt || $name }}" class="rounded-full w-full h-full object-cover">
         @elseif ($icon)
             <x-ui.icon name="{{ $icon }}" variant="{{ $iconVariant }}"
                 class="{{ Arr::toCssClasses($iconClasses) }}" />

@@ -38,4 +38,12 @@ class Owner extends Model
     {
         return $this->hasMany(Property::class);
     }
+
+    /**
+     * Get the payment methods associated with the owner.
+     */
+    public function paymentMethods(): HasMany
+    {
+        return $this->hasMany(PaymentMethod::class);
+    }
 }

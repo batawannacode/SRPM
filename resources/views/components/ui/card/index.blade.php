@@ -1,4 +1,4 @@
-@props(['size' => 'md', 'as' => 'div', 'href' => null, 'hoverless' => false])
+@props(['size' => 'md', 'as' => 'div', 'href' => null, 'hoverless' => false, 'clear' => false])
 @php
     $type = match(true) {
         $as === 'div' && !$href => 'div',
@@ -25,6 +25,7 @@
         'bg-white shadow dark:bg-neutral-800 border border-black/10 dark:border-white/10 hover:bg-neutral-50 dark:hover:bg-neutral-700',
         '[:where(&)]:p-4 [:where(&)]:rounded-lg',
         'dark:hover:!bg-neutral-800 hover:!bg-white' => $hoverless,
+        '!bg-transparent hover:!bg-transparent !shadow-none !border-none !p-0 !dark:hover:bg-transparent' => $clear,
         $variantClasses
     ];
 
