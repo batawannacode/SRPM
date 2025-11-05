@@ -3,7 +3,7 @@
     <div class="flex md:justify-between items-center gap-5">
         <div class="max-md:hidden">
             <h1 class="text-2xl font-bold text-neutral-700 dark:text-neutral-200">Welcome back, {{ auth()->user()->first_name }}!</h1>
-            <p class="text-sm text-neutral-500 dark:text-neutral-400">Here's what's happening in your dashboard today.</p>
+            <p class="text-sm text-neutral-500 dark:text-neutral-400">You're viewing your <strong class="text-indigo-500">{{ $propertyName }}</strong> property.</p>
         </div>
         {{-- Date Range Picker --}}
         <div class=" flex item-center gap-5 w-full md:w-[500px]">
@@ -30,8 +30,7 @@
                     </x-slot:trigger>
                     <x-ui.tooltip.content class="bg-indigo-600 text-white">
                         This amount represents the total <br/>
-                        income generated from all tenants <br/>
-                        payments.
+                        payments collected from all tenants. <br />
                     </x-ui.tooltip.content>
                 </x-ui.tooltip>
             </div>
@@ -57,11 +56,11 @@
         <x-ui.card hoverless size="full" class="flex flex-col items-center justify-center h-24">
             <div class="flex items-center space-x-2">
                 <h2 class="text-3xl font-bold truncate
-                    {{ $isRevenueHigher ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">
-                    ₱ {{ number_format($totalRevenue, 2) }}
+                    {{ $isNetIncomeHigher ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }}">
+                    ₱ {{ number_format($totalNetIncome, 2) }}
                 </h2>
 
-                @if($isRevenueHigher)
+                @if($isNetIncomeHigher)
                 {{-- Arrow Up Icon --}}
                 <x-ui.icon variant="bold" name="ps:arrow-up" class="w-6 h-6 !text-emerald-600 dark:!text-emerald-400" />
                 @else
@@ -70,13 +69,13 @@
                 @endif
             </div>
             <div class="text-sm text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
-                Total Revenue
+                Net Income (Profit)
                 <x-ui.tooltip>
                     <x-slot:trigger>
                         <x-ui.icon name="information-circle" class="size-4 !text-neutral-500 dark:!text-neutral-400" />
                     </x-slot:trigger>
                     <x-ui.tooltip.content class="bg-indigo-600 text-white">
-                        This amount represents the net revenue for the all period.<br/>
+                        This amount represents the net income for the all period.<br/>
                         It is calculated as: Total Income − Total Expenses.<br/>
                         A positive value indicates profit; a negative value indicates a loss.<br/>
                     </x-ui.tooltip.content>
@@ -114,7 +113,13 @@
         </x-ui.card>
 
         <x-ui.card hoverless size="full">
-            <h3 class="text-lg font-semibold dark:text-neutral-200 text-neutral-800">Vacancy Rate</h3>
+            <div class="flex items-center justify-between gap-5">
+                <h3 class="text-lg font-semibold dark:text-neutral-200 text-neutral-800">Vacancy Rate</h3>
+                <a href="{{ route('owner.units') }}" class="text-primary hover:underline flex items-center gap-2">
+                    View Details
+                    <x-ui.icon name="arrow-right" class="size-5 inline-block !text-primary align-middle" />
+                </a>
+            </div>
             <div class="mt-4 flex flex-col items-center space-y-2" wire:ignore>
                  <x-ui.chart.pie-chart :labels="$vacancyChart['labels']" :series="$vacancyChart['series']" dispatch_name="update-vacancy-chart" />
                   <p class="text-4xl flex flex-col justify-center items-center font-bold text-neutral-800 dark:text-neutral-200">
@@ -141,23 +146,23 @@
                 <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700 text-sm">
                     <thead class="bg-neutral-100 dark:bg-neutral-700">
                         <tr class="text-left text-xs font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">
-                            <th class="px-4 py-3">Date</th>
-                            <th class="px-4 py-3">Tenant</th>
-                            <th class="px-4 py-3">Amount</th>
-                            <th class="px-4 py-3">Method</th>
-                            <th class="px-4 py-3 text-center">Status</th>
+                            <th class="p-4">Date</th>
+                            <th class="p-4">Tenant</th>
+                            <th class="p-4">Amount</th>
+                            <th class="p-4">Method</th>
+                            <th class="p-4 text-center">Status</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
                         @forelse($recentPayments as $payment)
                         <tr class="hover:bg-neutral-100 dark:hover:bg-neutral-800/80 dark:bg-neutral-800 transition">
-                            <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200">{{ $payment->payment_date->timezone('Asia/Manila')->format('M d, Y h:i A') }}</td>
-                            <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200">{{ $payment->tenant->user->fullName }}</td>
+                            <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200">{{ $payment->created_at->timezone('Asia/Manila')->format('M d, Y h:i A') }}</td>
+                            <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200">{{ $payment->expectedPayment->lease->tenant->user->fullName }}</td>
                             <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200">₱ {{ number_format($payment->amount, 2) }}</td>
                             <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200">{{ $payment->payment_method }}</td>
                             <td class="px-4 py-3 flex justify-center">
-                                 <x-ui.badge color="{{ $payment->status === 'paid' ? 'emerald' : ( $payment->status === 'pending' ? 'amber' : 'rose' ) }}">
-                                    {{ ucfirst(strtolower($payment->status)) }}
+                                 <x-ui.badge color="{{ $payment->expectedPayment->status === 'paid' ? 'emerald' : ( $payment->expectedPayment->status === 'pending' ? 'amber' : 'rose' ) }}">
+                                    {{ ucfirst(strtolower($payment->expectedPayment->status)) }}
                                  </x-ui.badge>
                             </td>
                         </tr>
@@ -186,10 +191,10 @@
                 <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700 text-sm">
                     <thead class="bg-neutral-100 dark:bg-neutral-700">
                         <tr class="text-left text-xs font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">
-                            <th class="px-4 py-3">Date</th>
-                            <th class="px-4 py-3">Type</th>
-                            <th class="px-4 py-3">Description</th>
-                            <th class="px-4 py-3 text-center">Status</th>
+                            <th class="p-4">Date</th>
+                            <th class="p-4">Type</th>
+                            <th class="p-4">Description</th>
+                            <th class="p-4 text-center">Status</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
@@ -199,7 +204,7 @@
                             <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200">{{ ucfirst($request->type) }}</td>
                             <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200">{{ $request->description }}</td>
                             <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200 flex justify-center">
-                                <x-ui.badge color="{{ $request->status === 'completed' ? 'emerald' : ( $request->status === 'in_progress' ? 'amber' : 'rose' ) }}">
+                                <x-ui.badge color="{{ $request->status === 'completed' ? 'emerald' : ( $request->status === 'in_progress' ? 'sky' : 'amber' ) }}">
                                     {{ ucfirst(strtolower(str_replace('_', ' ', $request->status))) }}
                                 </x-ui.badge>
                             </td>
@@ -229,9 +234,10 @@
                 <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700 text-sm">
                     <thead class="bg-neutral-100 dark:bg-neutral-700">
                         <tr class="text-left text-xs font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">
-                            <th class="px-4 py-3">Date</th>
-                            <th class="px-4 py-3">Type</th>
-                            <th class="px-4 py-3">Amount</th>
+                            <th class="p-4">Date</th>
+                            <th class="p-4">Type</th>
+                            <th class="p-4">Description</th>
+                            <th class="p-4">Amount</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
@@ -243,6 +249,7 @@
                                         {{ ucfirst(strtolower($expense->type)) }}
                                     </x-ui.badge>
                                 </td>
+                                <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200">{{ $expense->description ?? 'N/A' }}</td>
                                 <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200">₱ {{ number_format($expense->amount, 2) }}</td>
                             </tr>
                         @empty

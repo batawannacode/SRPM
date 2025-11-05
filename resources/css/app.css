@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&family=Qwitcher+Grypen:wght@700&display=swap');
 
 @import './sheaf-theme.css';
-
+@import '../../vendor/spatie/livewire-filepond/resources/dist/filepond.css';
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
 

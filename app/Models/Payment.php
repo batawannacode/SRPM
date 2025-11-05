@@ -17,12 +17,9 @@ class Payment extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'lease_id',
-        'tenant_id',
+        'expected_payment_id',
         'amount',
-        'payment_date',
         'payment_method',
-        'status',
         'account_name',
         'account_number',
         'reference_number',
@@ -35,22 +32,14 @@ class Payment extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'payment_date' => 'datetime',
+        'amount' => 'decimal:2',
     ];
 
     /**
-     * Get the lease that owns the payment.
+     * Get the expected payment that owns the payment.
      */
-    public function lease(): BelongsTo
+    public function expectedPayment(): BelongsTo
     {
-        return $this->belongsTo(Lease::class);
-    }
-
-    /**
-     * Get the tenant that owns the payment.
-     */
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class);
+        return $this->belongsTo(ExpectedPayment::class);
     }
 }

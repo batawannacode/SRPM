@@ -4,6 +4,8 @@ namespace App\Livewire\Owner\Components;
 
 use App\Models\Owner;
 use App\Models\Property;
+use App\Livewire\Concerns\HasToast;
+use App\Support\Toast;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
@@ -11,6 +13,7 @@ use Livewire\Component;
 
 class SelectProperties extends Component
 {
+    use HasToast;
     public int $selectedProperty;
     public Collection $properties;
     public Owner $owner;
@@ -37,7 +40,7 @@ class SelectProperties extends Component
         if ($this->owner->active_property != $value) {
             // Update active property
             $this->owner->update(['active_property' => $value]);
-
+            Toast::success('Successfully Switched to your property!');
             // Refresh the page
             return redirect(request()->header('Referer') ?? route('owner.dashboard'));
         }

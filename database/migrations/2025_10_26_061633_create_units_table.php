@@ -20,10 +20,6 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->string('unit_number');
             $table->enum('status', ['vacant', 'occupied', 'maintenance'])->default('vacant');
-            $table->enum('rent_type', ['monthly', 'yearly', 'custom'])->default('monthly');
-            $table->decimal('rent_price', 65, 2)->default(0);
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
             $table->timestamps();
         });
     }

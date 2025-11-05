@@ -15,14 +15,18 @@ class Dashboard extends Component
 {
     use HasToast;
 
+    public string $propertyName = '';
     public string $startDate = '';
     public string $endDate = '';
     public string $filterPeriodIncome = 'monthly';
 
     public function mount(): void
     {
+        $owner = auth()->user()->owner;
+
         $this->startDate = \Carbon\Carbon::now()->startOfYear()->toDateString(); // Jan 01 of this year
         $this->endDate = \Carbon\Carbon::now()->endOfYear()->toDateString();     // Dec 31 of this year
+        $this->propertyName = Property::find($owner->active_property)->name;
     }
 
      /**
@@ -47,11 +51,15 @@ class Dashboard extends Component
         $end = $this->endDate ? \Carbon\Carbon::parse($this->endDate)->endOfDay() : null;
 
         // === Recent Activity (Filtered by Date) ===
-        $recentPayments = Payment::with('tenant')
-            ->where('status', 'paid')
-            ->whereHas('lease.unit', fn($q) => $q->where('property_id', $property->id))
-            ->when($start && $end, fn($q) => $q->whereBetween('payment_date', [$start, $end]))
-            ->latest()
+        $recentPayments = Payment::query()
+            ->whereHas('expectedPayment', function ($query) use ($property) {
+                $query->where('status', 'paid')
+                    ->whereHas('lease.unit', fn($q) => $q->where('property_id', $property->id));
+            })
+            ->when($start && $end, function ($query) use ($start, $end) {
+                $query->whereBetween('created_at', [$start, $end]); // or use payment_date if stored in Payment
+            })
+            ->latest('created_at')
             ->take(5)
             ->get();
 
@@ -68,17 +76,19 @@ class Dashboard extends Component
             ->get();
 
         // === Statistics (Filtered by Date Range) ===
-        $totalIncome = Payment::where('status', 'paid')
-            ->whereHas('lease.unit', fn($q) => $q->where('property_id', $property->id))
-            ->when($start && $end, fn($q) => $q->whereBetween('payment_date', [$start, $end]))
+        $totalIncome = Payment::whereHas('expectedPayment', function ($query) use ($property) {
+                $query->where('status', 'paid')
+                    ->whereHas('lease.unit', fn($q) => $q->where('property_id', $property->id));
+            })
+            ->when($start && $end, fn($q) => $q->whereBetween('created_at', [$start, $end])) // or payment_date if exists
             ->sum('amount');
 
         $totalExpenses = Expense::where('property_id', $property->id)
             ->when($start && $end, fn($q) => $q->whereBetween('created_at', [$start, $end]))
             ->sum('amount');
 
-        $totalRevenue = $totalIncome - $totalExpenses;
-        $isRevenueHigher = $totalRevenue > $totalExpenses;
+        $totalNetIncome = $totalIncome - $totalExpenses;
+        $isNetIncomeHigher = $totalNetIncome > 0 ? true : false;
 
         // === Unit Statistics (by status within date range) ===
         $unitQuery = $property->units();
@@ -97,10 +107,12 @@ class Dashboard extends Component
         ];
 
           // === Monthly Income Data ===
-        $monthlyIncome = Payment::selectRaw('MONTH(payment_date) as month, SUM(amount) as total')
-            ->where('status', 'paid')
-            ->whereHas('lease.unit', fn($q) => $q->where('property_id', $property->id))
-            ->whereYear('payment_date', now()->year)
+        $monthlyIncome = Payment::selectRaw('MONTH(created_at) as month, SUM(amount) as total')
+            ->whereHas('expectedPayment', function ($query) use ($property) {
+                $query->where('status', 'paid')
+                    ->whereHas('lease.unit', fn($q) => $q->where('property_id', $property->id));
+            })
+            ->whereYear('created_at', now()->year)
             ->groupBy('month')
             ->pluck('total', 'month')
             ->toArray();
@@ -147,8 +159,8 @@ class Dashboard extends Component
             'totalIncome',
             'totalExpenses',
             'totalUnits',
-            'totalRevenue',
-            'isRevenueHigher',
+            'totalNetIncome',
+            'isNetIncomeHigher',
             'vacancyChart',
             'maintenanceUnits',
             'expenseChartData'
@@ -163,8 +175,11 @@ class Dashboard extends Component
         $now = now();
 
         // INCOME
-        $incomeQuery = Payment::where('status', 'paid')
-            ->whereHas('lease.unit', fn($q) => $q->where('property_id', $property->id));
+        $incomeQuery = Payment::query()
+            ->whereHas('expectedPayment', function ($query) use ($property) {
+                $query->where('status', 'paid')
+                    ->whereHas('lease.unit', fn($q) => $q->where('property_id', $property->id));
+            });
 
         // EXPENSE
         $expenseQuery = Expense::whereHas('property', fn($q) => $q->where('id', $property->id));
@@ -172,7 +187,7 @@ class Dashboard extends Component
         if ($period === 'yearly') {
             // === Group by year ===
             $income = $incomeQuery
-                ->selectRaw('YEAR(payment_date) as year, SUM(amount) as total')
+                ->selectRaw('YEAR(created_at) as year, SUM(amount) as total')
                 ->groupBy('year')
                 ->pluck('total', 'year')
                 ->toArray();
@@ -187,8 +202,8 @@ class Dashboard extends Component
         } else {
             // === Group by month (current year) ===
             $income = $incomeQuery
-                ->whereYear('payment_date', $now->year)
-                ->selectRaw('MONTH(payment_date) as month, SUM(amount) as total')
+                ->whereYear('created_at', $now->year)
+                ->selectRaw('MONTH(created_at) as month, SUM(amount) as total')
                 ->groupBy('month')
                 ->pluck('total', 'month')
                 ->toArray();

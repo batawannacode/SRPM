@@ -1,73 +1,113 @@
-<x-ui.modal id="notifications" width="md" animation="slide" heading="Notifications" slideover sticky-header>
-    {{-- HEADER --}}
-    <div class="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-700 px-2 pb-3">
-        <div class="flex items-center gap-2">
-            <span class="text-xs font-medium text-white bg-primary dark:bg-green-500 rounded-full px-2 py-0.5">
-                {{ count($notifications ?? [
-                    ['type' => 'message', 'name' => 'Michael Jordan'],
-                    ['type' => 'activity', 'name' => 'Jane Doe'],
-                    ['type' => 'activity', 'name' => 'John Doe The Great'],
-                ]) }}
+<div class="flex items-center justify-center mr-2">
+    {{-- NOTIFICATIONS BUTTON --}}
+    <div class="relative">
+        <x-ui.button x-on:click="$modal.open('notifications')" variant="soft" icon="ps:bell" class="text-neutral-600 dark:text-neutral-200 hover:bg-indigo-100 dark:hover:bg-neutral-700" />
+        @if ($this->notifications->where(fn($query) => !$query->is_read)?->count() > 0)
+        <span class="absolute right-1 top-1">
+            <span class="relative flex size-3">
+                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                <span class="relative inline-flex size-3 rounded-full bg-red-500"></span>
             </span>
-        </div>
-
-        {{-- HEADER BUTTONS --}}
-        <div class="flex items-center gap-2">
-            <button class="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium" wire:click="markAllAsRead">
-                Mark all as read
-            </button>
-            <button class="text-xs text-red-600 dark:text-red-400 hover:underline font-medium" wire:click="deleteAllNotifications">
-                Delete all
-            </button>
-        </div>
+        </span>
+        @endif
     </div>
 
-    {{-- BODY --}}
-    <div class="space-y-2 mt-4 max-h-[70vh] overflow-y-auto">
-        @foreach ([
-        ['id' => 1, 'type' => 'message', 'name' => 'Michael Jordan', 'content' => 'Hi there! I noticed you forgot...', 'time' => '03:25 am', 'unread' => true],
-        ['id' => 2, 'type' => 'activity', 'name' => 'Jane Doe', 'content' => 'Jane accepted your task offer.', 'time' => 'Yesterday', 'unread' => false],
-        ['id' => 3, 'type' => 'activity', 'name' => 'John Doe The Great', 'content' => 'John completed your request.', 'time' => '2 days ago', 'unread' => true],
-        ['id' => 4, 'type' => 'message', 'name' => 'Queen Sliyva', 'content' => 'Can we discuss the next step?', 'time' => '10:45 am', 'unread' => false],
-        ] as $notif)
-        <div class="group w-full flex items-center justify-between p-2 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700/60 transition text-start">
-            {{-- LEFT: ICON + DETAILS --}}
-            <div class="flex items-center gap-3 w-full">
-                {{-- ICON --}}
-                @if ($notif['type'] === 'message')
-                <div class="flex items-center justify-center shrink-0 size-10 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-300">
-                    <x-ui.icon name="ps:chat-circle-dots" class="size-5" />
-                </div>
-                @elseif ($notif['type'] === 'activity')
-                <div class="flex items-center justify-center shrink-0 size-10 rounded-full bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-300">
-                    <x-ui.icon name="ps:lightning" class="size-5" />
-                </div>
-                @else
-                <div class="flex items-center justify-center shrink-0 size-10 rounded-full bg-neutral-200 dark:bg-neutral-700">
-                    <x-ui.icon name="ps:bell" class="size-5 text-neutral-600 dark:text-neutral-300" />
-                </div>
-                @endif
+    {{-- NOTIFICATIONS MODAL --}}
+    <x-ui.modal id="notifications" width="md" animation="slide" heading="Notifications" slideover sticky-header>
+        {{-- HEADER --}}
+        <div class="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-700 px-2 pb-3 sticky -top-5 pt-5 -mt-5 bg-white dark:bg-neutral-900 z-10">
+            {{-- UNREAD COUNT + FILTERS --}}
+            <div class="flex items-center gap-4">
+                <span class=" text-xs font-medium text-white bg-primary dark:bg-amber-500 rounded-full px-2 py-0.5">
+                    {{ $this->notifications?->count() ?? 0 }}
+                </span>
+                <div class="flex items-center gap-2 bg-transparent rounded">
+                    <button type="button" wire:click="showAll" class="{{ $selectedTab === 'all' ? 'bg-neutral-100 dark:bg-neutral-800' : '' }} text-xs px-2 py-1 rounded hover:bg-neutral-50 dark:hover:bg-neutral-700 font-medium">
+                        All
+                    </button>
 
-                {{-- DETAILS --}}
-                <div class="flex flex-col flex-1">
-                    <h3 class="font-medium text-sm text-neutral-800 dark:text-neutral-100">
-                        {{ $notif['name'] }}
-                    </h3>
-                    <p class="text-xs text-neutral-500 dark:text-neutral-400 truncate w-48 md:w-64">
-                        {{ $notif['content'] }}
-                    </p>
+                    <button type="button" wire:click="showUnread" class="{{ $selectedTab === 'unread' ? 'bg-neutral-100 dark:bg-neutral-800' : '' }} flex items-center text-xs px-2 py-1 rounded hover:bg-neutral-50 dark:hover:bg-neutral-700 font-medium">
+                        Unread
+                    </button>
+                </div>
+            </div>
+
+            {{-- THREE DOTS DROPDOWN (Sheaf) --}}
+            <div class="flex items-center gap-2">
+                <x-ui.dropdown position="bottom-end">
+                    <x-slot:button>
+                        <x-ui.icon name="ps:dots-three" class="size-6 text-neutral-600 dark:text-neutral-300" />
+                    </x-slot:button>
+                    <x-slot:menu>
+                        <x-ui.dropdown.item wire:click="markAllAsRead" class="text-sm">
+                            Mark all as read
+                        </x-ui.dropdown.item>
+
+                        <x-ui.dropdown.item wire:click="deleteAllNotifications" class="text-sm text-red-600">
+                            Delete all
+                        </x-ui.dropdown.item>
+                    </x-slot:menu>
+                </x-ui.dropdown>
+            </div>
+        </div>
+
+        {{-- BODY --}}
+        <div class="mt-4">
+            @forelse ($this->notifications as $notif)
+            @php
+            if(!$notif->is_read){
+            $not_read = '!text-neutral-900 dark:!text-neutral-100';
+            } else {
+            $not_read = '';
+            }
+            @endphp
+            <div class="group cursor-pointer w-full flex items-center justify-between px-2 py-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700/60 transition text-start" wire:click="markAsRead({{ $notif->id }})">
+                {{-- LEFT: ICON + DETAILS --}}
+                <div class="flex items-center gap-3">
+                    {{-- ICON --}}
+                    @if ($notif->type === 'lease_expiration')
+                    <div class="flex items-center justify-center shrink-0 size-10 rounded-full bg-rose-100 dark:bg-rose-900/40 dark:text-rose-300">
+                        <x-ui.icon name="ps:scroll" class="size-5 !text-rose-600" />
+                    </div>
+                    @elseif ($notif->type === 'payment_due')
+                    <div class="flex items-center justify-center shrink-0 size-10 rounded-full bg-orange-100 dark:bg-orange-900/40 dark:text-orange-300">
+                        <x-ui.icon name="ps:hand-coins" class="size-5 !text-orange-600" />
+                    </div>
+                    @elseif ($notif->type === 'maintenance_update')
+                    <div class="flex items-center justify-center shrink-0 size-10 rounded-full bg-amber-100 dark:bg-amber-900/40 dark:text-amber-300">
+                        <x-ui.icon name="ps:hand-coins" class="size-5 !text-amber-600" />
+                    </div>
+                    @else
+                    <div class="flex items-center justify-center shrink-0 size-10 rounded-full bg-neutral-200 dark:bg-neutral-700">
+                        <x-ui.icon name="ps:bell" class="size-5 text-neutral-600 dark:text-neutral-300" />
+                    </div>
+                    @endif
+
+                    {{-- DETAILS --}}
+                    <div class="flex flex-col flex-1">
+                        <h3 class="font-medium text-sm text-neutral-400 dark:text-neutral-500 {{ !$notif->is_read ? '!text-neutral-900 dark:!text-neutral-100' : '' }}">
+                            {{ $notif->type === 'lease_expiration' ? 'Lease Expiration' : ($notif->type === 'payment_due' ? 'Payment Due' : ($notif->type === 'maintenance_update' ? 'Maintenance Update' : 'Notification')) }}
+                        </h3>
+                        <p class="text-xs text-neutral-400 dark:text-neutral-500 w-48 md:w-64 {{ !$notif->is_read ? '!text-neutral-900 dark:!text-neutral-100' : '' }}">
+                            {{ $notif->message }}
+                        </p>
+                    </div>
                 </div>
 
                 {{-- TIME + UNREAD DOT --}}
-                <div class="flex flex-col items-end text-xxs whitespace-nowrap text-neutral-400 mr-2">
-                    <span>{{ $notif['time'] }}</span>
-                    @if($notif['unread'])
-                    <span class="w-2 h-2 bg-yellow-400 rounded-full mt-1"></span>
-                    @endif
+                <div class="flex flex-col items-end text-xs text-neutral-400 dark:text-neutral-500">
+                    <span>{{ $notif->created_at->diffForHumans() }}</span>
+                    @unless($notif->is_read)
+                    <span class="w-2 h-2 bg-indigo-600 rounded-full mt-1"></span>
+                    @endunless
                 </div>
             </div>
+            @empty
+            <p class="text-center text-sm text-neutral-500 dark:text-neutral-400 mt-10">
+                You have no notifications.
+            </p>
+            @endforelse
         </div>
-        @endforeach
-    </div>
-</x-ui.modal>
+    </x-ui.modal>
+</div>
 

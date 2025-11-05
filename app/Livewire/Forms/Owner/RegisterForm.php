@@ -18,6 +18,7 @@ class RegisterForm extends Form
 {
     // Personal Information
     public string $email = '';
+    public string $phone_number = '';
     public string $first_name = '';
     public string $last_name = '';
     public string $password = '';
@@ -27,7 +28,6 @@ class RegisterForm extends Form
     public string $property_name = '';
     public string $property_address = '';
     public int $total_units = 0;
-
     public bool $terms = false;
 
     public function rules(): array
@@ -36,6 +36,7 @@ class RegisterForm extends Form
             'email' => ['required', 'email', 'unique:users,email'],
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
+            'phone_number' => ['required', 'numeric', 'digits_between:10,15'],
             'password' => ['required', 'min:8', 'confirmed'],
             'property_name' => ['required', 'string', 'max:255'],
             'property_address' => ['required', 'string', 'max:255'],
@@ -52,6 +53,9 @@ class RegisterForm extends Form
             'email.unique' => 'The email address is already registered.',
             'first_name.required' => 'The first name is required.',
             'last_name.required' => 'The last name is required.',
+            'phone_number.required' => 'The phone number is required.',
+            'phone_number.max' => 'The phone number must not exceed 15 characters.',
+            'phone_number.regex' => 'The phone number must be a valid format.',
             'password.required' => 'The password is required.',
             'password.min' => 'The password must be at least 8 characters.',
             'password.confirmed' => 'The password confirmation does not match.',
@@ -78,6 +82,7 @@ class RegisterForm extends Form
                 'first_name' => $this->first_name,
                 'last_name' => $this->last_name,
                 'email' => $this->email,
+                'phone_number' => $this->phone_number,
                 'password' => $this->password,
                 'password_confirmation' => $this->password_confirmation,
             ]);
@@ -100,10 +105,12 @@ class RegisterForm extends Form
 
             /** 4️⃣ Generate units dynamically */
             collect(range(1, $this->total_units))
-                ->each(fn($i) => Unit::create([
-                    'property_id' => $property->id,
-                    'unit_number' => "Unit {$i}",
-                ]));
+                ->each(fn($i) =>
+                    Unit::create([
+                        'property_id' => $property->id,
+                        'unit_number' => "Unit {$i}",
+                    ])
+                );
 
             DB::commit();
 

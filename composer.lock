@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e4031c7cc4949d9510282c457df423d3",
+    "content-hash": "48738bf23aca8339b6b479d4e3aca98b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1156,6 +1156,81 @@
                 }
             ],
             "time": "2025-08-22T14:27:06+00:00"
+        },
+        {
+            "name": "juliomotol/laravel-auth-timeout",
+            "version": "v4.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/juliomotol/laravel-auth-timeout.git",
+                "reference": "a33960d24a7d954aa875b5d89f811c8596f6dd6c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/juliomotol/laravel-auth-timeout/zipball/a33960d24a7d954aa875b5d89f811c8596f6dd6c",
+                "reference": "a33960d24a7d954aa875b5d89f811c8596f6dd6c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/auth": "^9.0|^10.0|^11.0|^12.0",
+                "illuminate/events": "^9.0|^10.0|^11.0|^12.0",
+                "illuminate/session": "^9.0|^10.0|^11.0|^12.0",
+                "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.13.0"
+            },
+            "require-dev": {
+                "larastan/larastan": "^2.0.1|^3.0",
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^6.0|^7.0|^8.0",
+                "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
+                "pestphp/pest": "^1.21|^2.34|^3.7",
+                "pestphp/pest-plugin-laravel": "^1.1|^2.3|^3.1",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0|^2.0",
+                "phpstan/phpstan-phpunit": "^1.0|^2.0",
+                "phpunit/phpunit": "^9.5|^10.0|^11.5.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "AuthTimeout": "JulioMotol\\AuthTimeout\\Facades\\AuthTimeout"
+                    },
+                    "providers": [
+                        "JulioMotol\\AuthTimeout\\AuthTimeoutServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JulioMotol\\AuthTimeout\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Julio Motol",
+                    "email": "julio.motol89@gmail.com",
+                    "homepage": "https://juliomotol.github.io"
+                }
+            ],
+            "description": "Authentication Timeout for Laravel",
+            "homepage": "https://github.com/juliomotol/larave-auth-timeout",
+            "keywords": [
+                "Authentication",
+                "auth",
+                "laravel",
+                "timeout"
+            ],
+            "support": {
+                "issues": "https://github.com/juliomotol/laravel-auth-timeout/issues",
+                "source": "https://github.com/juliomotol/laravel-auth-timeout/tree/v4.2.0"
+            },
+            "time": "2025-03-02T12:42:06+00:00"
         },
         {
             "name": "laravel/fortify",
@@ -3921,6 +3996,67 @@
             "time": "2025-10-15T20:32:17+00:00"
         },
         {
+            "name": "spatie/laravel-package-tools",
+            "version": "1.92.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-package-tools.git",
+                "reference": "f09a799850b1ed765103a4f0b4355006360c49a5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/f09a799850b1ed765103a4f0b4355006360c49a5",
+                "reference": "f09a799850b1ed765103a4f0b4355006360c49a5",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^9.28|^10.0|^11.0|^12.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.5",
+                "orchestra/testbench": "^7.7|^8.0|^9.0|^10.0",
+                "pestphp/pest": "^1.23|^2.1|^3.1",
+                "phpunit/php-code-coverage": "^9.0|^10.0|^11.0",
+                "phpunit/phpunit": "^9.5.24|^10.5|^11.5",
+                "spatie/pest-plugin-test-time": "^1.1|^2.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\LaravelPackageTools\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Tools for creating Laravel packages",
+            "homepage": "https://github.com/spatie/laravel-package-tools",
+            "keywords": [
+                "laravel-package-tools",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-package-tools/issues",
+                "source": "https://github.com/spatie/laravel-package-tools/tree/1.92.7"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-07-17T15:46:43+00:00"
+        },
+        {
             "name": "spatie/laravel-permission",
             "version": "6.21.0",
             "source": {
@@ -4002,6 +4138,84 @@
                 }
             ],
             "time": "2025-07-23T16:08:05+00:00"
+        },
+        {
+            "name": "spatie/livewire-filepond",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/livewire-filepond.git",
+                "reference": "fd91404aab616ef2093f21971242ea7f25e285b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/livewire-filepond/zipball/fd91404aab616ef2093f21971242ea7f25e285b2",
+                "reference": "fd91404aab616ef2093f21971242ea7f25e285b2",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^10.0||^11.0||^12.0",
+                "livewire/livewire": "^3.5",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.1",
+                "laravel/pint": "^1.14",
+                "nunomaduro/collision": "^8.1.1||^7.10.0",
+                "orchestra/testbench": "^9.0.0||^8.22.0||^10.0",
+                "pestphp/pest": "^2.34||^3.7",
+                "pestphp/pest-plugin-arch": "^2.7||^3.0",
+                "pestphp/pest-plugin-laravel": "^2.3||^3.1",
+                "phpstan/extension-installer": "^1.3",
+                "phpstan/phpstan-deprecation-rules": "^1.1||^2.0",
+                "phpstan/phpstan-phpunit": "^1.3||^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\LivewireFilepond\\LivewireFilepondServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\LivewireFilepond\\": "src/",
+                    "Spatie\\LivewireFilepond\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rias Van der Veken",
+                    "email": "rias@spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Upload files using Filepond in Livewire components",
+            "homepage": "https://github.com/spatie/livewire-filepond",
+            "keywords": [
+                "laravel",
+                "livewire",
+                "livewire-filepond",
+                "spatie",
+                "uploads"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/livewire-filepond/issues",
+                "source": "https://github.com/spatie/livewire-filepond/tree/1.5.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-05-26T07:34:37+00:00"
         },
         {
             "name": "symfony/clock",
@@ -6534,6 +6748,67 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/v2.3.0"
             },
             "time": "2024-12-21T16:25:41+00:00"
+        },
+        {
+            "name": "vish4395/laravel-file-viewer",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vish4395/laravel-file-viewer.git",
+                "reference": "daa9ff3f011b67d79d635d015a5ebe635d34a1cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vish4395/laravel-file-viewer/zipball/daa9ff3f011b67d79d635d015a5ebe635d34a1cf",
+                "reference": "daa9ff3f011b67d79d635d015a5ebe635d34a1cf",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "*",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "LaravelFileViewer": "Vish4395\\LaravelFileViewer\\LaravelFileViewerFacade"
+                    },
+                    "providers": [
+                        "Vish4395\\LaravelFileViewer\\LaravelFileViewerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Vish4395\\LaravelFileViewer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vishal Sharma",
+                    "email": "vishal@newai.in",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A basic file viewer for Laravel projects",
+            "homepage": "https://github.com/vish4395/laravel-file-viewer",
+            "keywords": [
+                "laravel-file-viewer",
+                "vish4395"
+            ],
+            "support": {
+                "issues": "https://github.com/vish4395/laravel-file-viewer/issues",
+                "source": "https://github.com/vish4395/laravel-file-viewer/tree/1.0.4"
+            },
+            "time": "2025-09-10T06:06:56+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

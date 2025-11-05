@@ -20,6 +20,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->decimal('amount', 65, 2);
             $table->enum('type', ['electricity', 'water', 'maintenance', 'others'])->default('others');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

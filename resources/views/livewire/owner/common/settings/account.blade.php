@@ -64,17 +64,27 @@
                             <x-ui.input required type="text" wire:model='form.last_name' placeholder="Last Name" />
                         </x-ui.field>
                     </div>
+
                     <x-ui.field>
                         <x-ui.label for="email" text="{{ __('Email') }}" />
                         <x-ui.input required type="email" wire:model='form.email' placeholder="m@example.com" />
                     </x-ui.field>
+                    <x-ui.field>
+                        <x-ui.label for="phone_number" text="{{ __('Phone Number') }}" />
+                        <x-ui.input required type="text" wire:model='form.phone_number' placeholder="09XXXXXXXXX" />
+                    </x-ui.field>
 
-                    @error('form.email')
+                    <!-- errors-hasAny(['form.first_name', 'form.last_name', 'form.email', 'form.phone_number']-->
+                    @if($errors->hasAny(['form.first_name', 'form.last_name', 'form.email', 'form.phone_number']))
+                    @foreach(['form.first_name', 'form.last_name', 'form.email', 'form.phone_number'] as $field)
+                    @error($field)
                     <x-ui.error class="text-xs mt-0!" :messages="$message" />
                     @enderror
+                    @endforeach
+                    @endif
 
                     <div class="flex" >
-                        <x-ui.button type="submit" class="disabled:bg-neutral-400 disabled:cursor-not-allowed!" disabled wire:dirty.attr.remove="disabled" wire:target="form.first_name, form.last_name, form.email" color="emerald">Save</x-ui.button>
+                        <x-ui.button type="submit" class="disabled:bg-neutral-400 disabled:cursor-not-allowed!" disabled wire:dirty.attr.remove="disabled" wire:target="form.first_name, form.last_name, form.email, form.phone_number" color="emerald">Save</x-ui.button>
                     </div>
                 </form>
             </div>
@@ -93,12 +103,12 @@
                 <form class="w-full space-y-5" wire:submit.prevent="updatePassword">
                     <x-ui.field>
                         <x-ui.label for="current-password" text="{{ __('Current Password') }}" />
-                        <x-ui.input required type="password" id="current-password" wire:model='form.current_password' placeholder="Current Password" revealable />
+                        <x-ui.input clearable required type="password" id="current-password" wire:model='form.current_password' placeholder="Current Password" revealable />
                     </x-ui.field>
 
                     <x-ui.field>
                         <x-ui.label for="new-password" text="{{ __('New Password') }}" />
-                        <x-ui.input required type="password" id="new-password" wire:model='form.new_password' placeholder="New Password" revealable />
+                        <x-ui.input clearable required type="password" id="new-password" wire:model='form.password' placeholder="New Password" revealable />
                         <x-ui.description class="text-xs">
                             Your password must be at least 8 characters long and contain one uppercase letter, one lowercase letter, and one number.
                         </x-ui.description>
@@ -106,12 +116,12 @@
 
                     <x-ui.field>
                         <x-ui.label for="password_confirmation" text="{{ __('Confirm Password') }}" />
-                        <x-ui.input required type="password" id="password_confirmation" wire:model='form.password_confirmation' placeholder="Confirm Password" revealable />
+                        <x-ui.input clearable required type="password" id="password_confirmation" wire:model='form.password_confirmation' placeholder="Confirm Password" revealable />
                         <x-ui.description class="text-xs">Your password must match the confirmation password.</x-ui.description>
                     </x-ui.field>
 
-                    @if($errors->hasAny(['form.current_password', 'form.new_password', 'form.password_confirmation']))
-                    @foreach(['form.current_password', 'form.new_password', 'form.password_confirmation'] as $field)
+                    @if($errors->hasAny(['form.current_password', 'form.password', 'form.password_confirmation']))
+                    @foreach(['form.current_password', 'form.password', 'form.password_confirmation'] as $field)
                     @error($field)
                     <x-ui.error class="text-xs mt-0!" :messages="$message" />
                     @enderror
@@ -119,7 +129,7 @@
                     @endif
 
                     <div class="flex">
-                        <x-ui.button type="submit" class="disabled:bg-neutral-400 disabled:cursor-not-allowed!" disabled wire:dirty.attr.remove="disabled" wire:target="form.current_password, form.new_password, form.password_confirmation" color="emerald">Save</x-ui.button>
+                        <x-ui.button type="submit" class="disabled:bg-neutral-400 disabled:cursor-not-allowed!" disabled wire:dirty.attr.remove="disabled" wire:target="form.current_password, form.password, form.password_confirmation" color="emerald">Save</x-ui.button>
                     </div>
                 </form>
             </div>

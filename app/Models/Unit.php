@@ -18,13 +18,10 @@ class Unit extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'id',
         'property_id',
         'unit_number',
         'status',
-        'rent_type',
-        'rent_price',
-        'start_date',
-        'end_date',
     ];
 
      /**
@@ -33,9 +30,7 @@ class Unit extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
-        'rent_price' => 'decimal:2',
+        //
     ];
 
     /**

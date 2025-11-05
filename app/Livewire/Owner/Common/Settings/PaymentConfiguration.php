@@ -37,7 +37,7 @@ class PaymentConfiguration extends Component
         $this->toastSuccess('Payment method saved successfully.');
     }
 
-    public function editMethod($id): void
+    public function editMethod(int $id): void
     {
         $method = PaymentMethod::findOrFail($id);
 
@@ -52,7 +52,7 @@ class PaymentConfiguration extends Component
         $this->dispatch('open-modal', id: 'payment-method-modal');
     }
 
-    public function deleteMethod($id)
+    public function deleteMethod(int $id): void
     {
         $method = PaymentMethod::findOrFail($id);
         if ($method->qr_image_path) {
@@ -62,7 +62,7 @@ class PaymentConfiguration extends Component
         $this->toastSuccess('Payment method deleted successfully.');
         $this->loadMethods();
     }
-    public function cancelModal()
+    public function cancelModal(): void
     {
         $this->form->cancel(); // clean the file + reset
         $this->dispatch('close-modal', id: 'payment-method-modal'); // example modal close event

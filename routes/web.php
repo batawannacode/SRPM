@@ -12,9 +12,13 @@ use App\Livewire\Owner\Auth\Login as OwnerLogin;
 use App\Livewire\Owner\Auth\Register as OwnerRegister;
 use App\Livewire\Owner\Pages\Dashboard as OwnerDashboard;
 use App\Livewire\Owner\Pages\Leases;
+use App\Livewire\Owner\Pages\ViewLeaseDetails;
+use App\Livewire\Owner\Pages\Units as OwnerUnits;
 use App\Livewire\Owner\Pages\Expenses;
+use App\Livewire\Owner\Pages\Properties as OwnerProperties;
 use App\Livewire\Owner\Pages\Payments as OwnerPayments;
 use App\Livewire\Owner\Pages\Requests as OwnerRequests;
+use App\Http\Controllers\FilePreviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,7 +67,7 @@ Route::group([
     */
 
     Route::group([
-        // 'middleware' => ['guest', 'throttle:10,1'],
+        'middleware' => ['guest', 'throttle:10,1'],
         'prefix' => 'auth',
         'as' => 'auth.',
     ], function () {
@@ -80,6 +84,7 @@ Route::group([
         'middleware' => [
             'auth',
             'has_no_owner',
+            'auth.timeout',
             'role:'.Role::Owner->value,
         ],
     ], function () {
@@ -96,18 +101,33 @@ Route::group([
         // LEASES
         Route::get('leases', Leases::class)
             ->name('leases');
+        // LEASE DETAILS
+        Route::get('leases/{lease}', ViewLeaseDetails::class)
+            ->name('lease.details');
         // EXPENSES
         Route::get('expenses', Expenses::class)
             ->name('expenses');
+        // UNITS
+        Route::get('units', OwnerUnits::class)
+            ->name('units');
         // PAYMENTS
         Route::get('payments', OwnerPayments::class)
             ->name('payments');
         // REQUESTS
         Route::get('requests', OwnerRequests::class)
             ->name('requests');
+        // PROPERTIES
+        Route::get('properties', OwnerProperties::class)
+            ->name('properties');
         // SETTINGS
         Route::get('settings', Settings::class)
             ->name('settings');
+
+        // FILE PREVIEW
+        Route::get('file-preview/{encrypted}', FilePreviewController::class)
+            ->where('encrypted', '.*')
+            ->middleware('signed')
+            ->name('file.preview');
 
         /*
         *-----------------------------------------

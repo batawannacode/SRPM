@@ -98,5 +98,7 @@ class PaymentMethodForm extends Form
         }
 
         $this->reset();
+        $this->resetErrorBag();
+        $this->resetValidation();
     }
 }

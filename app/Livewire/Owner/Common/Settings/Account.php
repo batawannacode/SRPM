@@ -19,6 +19,7 @@ class Account extends Component
         $this->form->email = $user->email;
         $this->form->first_name = $user->first_name;
         $this->form->last_name = $user->last_name;
+        $this->form->phone_number = (string) $user->phone_number;
     }
 
     public function updateAvatar()
@@ -31,16 +32,20 @@ class Account extends Component
 
     public function updatePersonalInfo()
     {
-        $this->form->editPersonalInfo();
-        $this->toastSuccess('Personal information updated successfully.');
-        return redirect(request()->header('Referer') ?? route('owner.settings'));
-
+        if($this->form->editPersonalInfo()) {
+            $this->toastSuccess('Personal information updated successfully.');
+            return redirect(request()->header('Referer') ?? route('owner.settings'));
+        }
+        $this->toastError('Failed to update personal information.');
     }
 
-    public function updatePassword(): void
+    public function updatePassword()
     {
-        $this->form->editPassword();
-        $this->toastSuccess('Password updated successfully.');
+        if($this->form->editPassword()) {
+            $this->toastSuccess('Password updated successfully.');
+            return redirect(request()->header('Referer') ?? route('owner.settings'));
+        }
+        $this->toastError('Failed to update password.');
 
     }
 

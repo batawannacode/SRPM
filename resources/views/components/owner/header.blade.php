@@ -22,9 +22,7 @@
             {{-- DARKMODE TOGGLE --}}
             <x-ui.theme-switcher iconClasses="size-5" variant="inline" class="text-neutral-600 dark:text-neutral-200 hover:bg-indigo-100 dark:hover:bg-neutral-700" />
 
-            {{-- NOTIFICATIONS --}}
-            <x-ui.button x-on:click="$modal.open('notifications')" variant="soft" icon="ps:bell" class="text-neutral-600 dark:text-neutral-200 hover:bg-indigo-100 dark:hover:bg-neutral-700" />
-            {{-- NOTICATION MODAL --}}
+            {{-- NOTICATION --}}
             <livewire:common.notifications/>
 
             {{-- PROFILE --}}

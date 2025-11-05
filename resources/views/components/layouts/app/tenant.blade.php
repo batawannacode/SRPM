@@ -32,6 +32,7 @@
             progressBarAlignment="top"
         />
         @livewireScriptConfig
+        @filepondScripts
         @include('partials.body-scripts')
     </body>
 </html>

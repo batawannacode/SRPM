@@ -2,7 +2,7 @@
     {{-- HEADER --}}
     <div class="flex flex-col items-start mb-5">
         <h1 class="text-xl md:text-2xl font-bold text-neutral-800 dark:text-neutral-200">Settings</h1>
-        <p class="text-sm text-neutral-500">
+        <p class="text-sm text-neutral-500 dark:text-neutral-400">
             Manage your account and property settings. Changes are applied per tab.
         </p>
     </div>
@@ -12,8 +12,7 @@
         <x-ui.tabs wire:model.live="activeTab">
             <x-ui.tab.group class="justify-start">
                 <x-ui.tab label="Account" name="account" />
-                <x-ui.tab label="Property/s" name="property" />
-                <x-ui.tab label="Payment Configurations" name="payment" />
+                <x-ui.tab label="Payment Methods" name="payment" />
             </x-ui.tab.group>
         </x-ui.tabs>
     </div>

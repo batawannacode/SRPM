@@ -3,7 +3,6 @@
 namespace App\Livewire\Owner\Common;
 
 use App\Livewire\Owner\Common\Settings\Account;
-use App\Livewire\Owner\Common\Settings\Properties;
 use App\Livewire\Owner\Common\Settings\PaymentConfiguration;
 use App\Support\Toast;
 use Livewire\Attributes\Computed;
@@ -25,7 +24,6 @@ class Settings extends Component
     {
         $tab = match ($this->activeTab) {
             'account' => Account::class,
-            'property' => Properties::class,
             'payment' => PaymentConfiguration::class,
             default => Account::class,
         };

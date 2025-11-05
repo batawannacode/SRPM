@@ -3,7 +3,7 @@
     <div class="flex md:justify-between items-center gap-5">
         <div class="max-md:hidden">
             <h1 class="text-2xl font-bold text-neutral-700 dark:text-neutral-200">Expenses</h1>
-            <p class="text-sm text-neutral-500 dark:text-neutral-400">Track, review and manage all expense records for your properties.</p>
+            <p class="text-sm text-neutral-500 dark:text-neutral-400">Track, review and manage all expense records for your property.</p>
         </div>
         {{-- Date Range Picker --}}
         <div class=" flex item-center gap-5 w-full md:w-[500px]">
@@ -19,7 +19,7 @@
     </div>
 
     <div class="flex items-center justify-between gap-5 mb-6">
-        <x-ui.input wire:model.live="search" placeholder="Search..." class="max-w-sm" leftIcon="magnifying-glass" />
+        <x-ui.input clearable wire:model.live="search" placeholder="Search..." class="max-w-sm" leftIcon="magnifying-glass" />
         <x-ui.button color="emerald" icon="plus" wire:click="$dispatch('open-modal', { id: 'expense-utility-bill-modal' })">
             Add Utility Bill
         </x-ui.button>
@@ -31,10 +31,11 @@
             <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700 text-sm">
                 <thead class="bg-neutral-100 dark:bg-neutral-700">
                     <tr class="text-left text-xs font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">
-                        <th class="px-4 py-3">Date</th>
-                        <th class="px-4 py-3">Type</th>
-                        <th class="px-4 py-3">Amount</th>
-                        <th class="px-4 py-3 text-center">Actions</th>
+                        <th class="p-4">Date</th>
+                        <th class="p-4">Type</th>
+                        <th class="p-4">Description</th>
+                        <th class="p-4">Amount</th>
+                        <th class="p-4 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
@@ -46,6 +47,7 @@
                                 {{ ucfirst(strtolower($expense->type)) }}
                             </x-ui.badge>
                         </td>
+                        <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200">{{ $expense->description ?? 'N/A' }}</td>
                         <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200">₱ {{ number_format($expense->amount, 2) }}</td>
                         <td class="px-4 py-3 text-neutral-700 dark:text-neutral-200 flex items-center justify-center">
                             <x-ui.button class="!text-emerald-600" size="sm" variant="ghost" wire:click="editUtilityBill({{ $expense->id }})">
@@ -76,18 +78,32 @@
     </div>
 
     {{-- === Expense / Utility Bill Modal === --}}
-    <x-ui.modal id="expense-utility-bill-modal" heading="{{ $isEditing ? 'Edit Utility Bill' : 'Add Utility Bill' }}" :closeByClickingAway="false" :closeButton="false" width="lg">
+    <x-ui.modal id="expense-utility-bill-modal" heading="{{ $isEditing ? 'Edit Utility Bill' : 'Add Utility Bill' }}" description="{{ $isEditing ? 'Update the utility bill details.' : 'Add a new utility bill/expenses for a property. This can water, electricity, or other utility bills.' }}" :closeByClickingAway="false" :closeButton="false" width="lg">
         <div class="space-y-4">
             <!-- Type Select -->
-            <x-ui.select label="Type" triggerClass="!p-3" class="text-sm" wire:model="form.type" placeholder="Select type">
-                <x-ui.select.option value="electricity">Electricity</x-ui.select.option>
-                <x-ui.select.option value="water">Water</x-ui.select.option>
-                <x-ui.select.option value="maintenance">Maintenance</x-ui.select.option>
-                <x-ui.select.option value="others">Others</x-ui.select.option>
-            </x-ui.select>
+            <x-ui.field>
+                <x-ui.label for="type" text="Type" />
+                <x-ui.select label="Type" triggerClass="!p-3" class="text-sm" wire:model.live="form.type" placeholder="{{ trim($this->form['type']) ?: 'Select type' }}">
+                    <x-ui.select.option value="electricity">Electricity</x-ui.select.option>
+                    <x-ui.select.option value="water">Water</x-ui.select.option>
+                    <x-ui.select.option value="maintenance">Maintenance</x-ui.select.option>
+                    <x-ui.select.option value="others">Others</x-ui.select.option>
+                </x-ui.select>
+            </x-ui.field>
+
+            <!-- Description Input (Conditional) -->
+            @if($form['type'] === 'others' || $form['type'] === 'maintenance')
+            <x-ui.field>
+                <x-ui.label for="description" text="Description" />
+                <x-ui.textarea wire:model="form.description" placeholder="Enter your description..." />
+            </x-ui.field>
+            @endif
 
             <!-- Amount Input -->
-            <x-ui.input label="Amount" type="number" step="0.01" min="0" placeholder="Enter amount" wire:model="form.amount" />
+            <x-ui.field>
+                <x-ui.label for="amount" text="Amount" />
+                <x-ui.input label="Amount" type="number" step="0.01" min="0" placeholder="Enter amount" wire:model="form.amount" />
+            </x-ui.field>
         </div>
 
         {{-- Error Messages --}}
@@ -106,7 +122,7 @@
 
             @if (!$isEditing)
             <x-ui.button color="emerald" wire:click="saveUtilityBill">
-                Save Utility Bill
+                Add Utility Bill
             </x-ui.button>
             @else
             <x-ui.button color="emerald" wire:click="updateUtilityBill">

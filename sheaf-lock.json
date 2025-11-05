@@ -21,7 +21,9 @@
             "select",
             "switch",
             "dropdown",
-            "badge"
+            "badge",
+            "breadcrumbs",
+            "alerts"
         ],
         "text": [
             "select"

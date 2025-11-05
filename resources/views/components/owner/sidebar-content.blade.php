@@ -6,8 +6,8 @@
 
                 {{-- Dashboard --}}
                 <li class="group">
-                    <a wire:navigate.hover href="{{ route('owner.dashboard') }}" @class([ "flex items-center gap-x-2 py-2.5 px-5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary", "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.dashboard') ])>
-                        <x-ui.icon name="ps:books" @class(["size-5 shrink-0 group-hover:text-primary dark:group-hover:text-indigo-400", "text-primary dark:!text-indigo-400" => request()->routeIs('owner.dashboard')]) />
+                    <a wire:navigate.hover href="{{ route('owner.dashboard') }}" @class([ "flex items-center gap-x-2 py-2.5 px-4.5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary", "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.dashboard') ])>
+                        <x-ui.icon name="ps:chart-pie-slice" @class(["size-5 shrink-0 group-hover:text-primary dark:group-hover:text-indigo-400", "text-primary dark:!text-indigo-400" => request()->routeIs('owner.dashboard')]) />
                         <span class="h-5 leading-5">
                             Dashboard
                         </span>
@@ -16,28 +16,37 @@
 
                 {{-- Leases --}}
                 <li class="group">
-                    <a wire:navigate.hover href="{{ route('owner.leases') }}" @class([ "flex items-center gap-x-2 py-2.5 px-5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary", "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.leases') ])>
-                        <x-ui.icon name="ps:scroll" @class(["size-5 shrink-0 group-hover:text-primary dark:group-hover:text-indigo-400", "text-primary dark:!text-indigo-400" => request()->routeIs('owner.leases')]) />
+                    <a wire:navigate.hover href="{{ route('owner.leases') }}" @class([ "flex items-center gap-x-2 py-2.5 px-4.5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary", "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs(['owner.leases', 'owner.lease.details']) ])>
+                        <x-ui.icon name="ps:scroll" @class(["size-5 shrink-0 group-hover:text-primary dark:group-hover:text-indigo-400", "text-primary dark:!text-indigo-400" => request()->routeIs(['owner.leases', 'owner.lease.details'])]) />
                         <span class="h-5 leading-5">
                             Leases
                         </span>
                     </a>
                 </li>
 
-                {{-- Expenses --}}
+                {{-- Units --}}
                  <li class="group">
-                     <a wire:navigate.hover href="{{ route('owner.expenses') }}" @class([ "flex items-center gap-x-2 py-2.5 px-5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary" , "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.expenses') ])>
-                        <x-ui.icon name="ps:money-wavy" @class(["size-5 shrink-0 group-hover:text-primary dark:group-hover:text-indigo-400", "text-primary dark:!text-indigo-400"=> request()->routeIs('owner.expenses')]) />
+                     <a wire:navigate.hover href="{{ route('owner.units') }}" @class([ "flex items-center gap-x-2 py-2.5 px-4.5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary" , "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.units') ])>
+                        <x-ui.icon name="ps:bed" @class(["size-5 shrink-0 group-hover:text-primary dark:group-hover:text-indigo-400", "text-primary dark:!text-indigo-400"=> request()->routeIs('owner.units')]) />
                         <span class="h-5 leading-5">
-                            Expenses
+                            Units/Rooms
                         </span>
                      </a>
                  </li>
 
+                {{-- Expenses --}}
+                <li class="group">
+                    <a wire:navigate.hover href="{{ route('owner.expenses') }}" @class([ "flex items-center gap-x-2 py-2.5 px-4.5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary" , "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.expenses') ])>
+                        <x-ui.icon name="ps:money-wavy" @class(["size-5 shrink-0 group-hover:text-primary dark:group-hover:text-indigo-400", "text-primary dark:!text-indigo-400"=> request()->routeIs('owner.expenses')]) />
+                        <span class="h-5 leading-5">
+                            Expenses
+                        </span>
+                    </a>
+                </li>
 
                 {{-- Payments --}}
                 <li class="group">
-                    <a wire:navigate.hover href="{{ route('owner.payments') }}" @class([ "flex items-center gap-x-2 py-2.5 px-5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary", "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.payments') ])>
+                    <a wire:navigate.hover href="{{ route('owner.payments') }}" @class([ "flex items-center gap-x-2 py-2.5 px-4.5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary", "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.payments') ])>
                         <x-ui.icon name="ps:invoice" @class(["size-5 shrink-0 group-hover:text-primary dark:group-hover:text-indigo-400", "text-primary dark:!text-indigo-400" => request()->routeIs('owner.payments')]) />
                         <span class="h-5 leading-5">
                             Payments
@@ -47,10 +56,10 @@
 
                 {{-- Complaints / Requests --}}
                 <li class="group">
-                    <a wire:navigate.hover href="{{ route('owner.requests') }}" @class([ "flex items-center gap-x-2 py-2.5 px-5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary", "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.requests') ])>
+                    <a wire:navigate.hover href="{{ route('owner.requests') }}" @class([ "flex items-center gap-x-2 py-2.5 px-4.5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary", "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.requests') ])>
                         <x-ui.icon name="ps:clipboard-text" @class(["size-5 shrink-0 group-hover:text-primary dark:group-hover:text-indigo-400", "text-primary dark:!text-indigo-400" => request()->routeIs('owner.requests')]) />
                         <span class="h-5 leading-5">
-                            Complaints/Requests
+                            Complaints & Requests
                         </span>
                     </a>
                 </li>
@@ -66,9 +75,18 @@
             {{-- Property --}}
             <livewire:owner.components.select-properties>
 
+            <li class="group">
+                <a wire:navigate.hover href="{{ route('owner.properties') }}" @class([ "flex items-center gap-x-2 py-2.5 px-4.5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary" , "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.properties') ])>
+                    <x-ui.icon name="ps:building-apartment" @class(["size-5 shrink-0 group-hover:text-primary dark:group-hover:text-indigo-400", "text-primary dark:!text-indigo-400"=> request()->routeIs('owner.properties')]) />
+                    <span class="h-5 leading-5">
+                        Properties
+                    </span>
+                </a>
+            </li>
+
             {{-- Settings --}}
             <li class="group">
-                <a wire:navigate.hover href="{{ route('owner.settings') }}" @class([ "flex items-center gap-x-2 py-2.5 px-5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary", "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.settings') ])>
+                <a wire:navigate.hover href="{{ route('owner.settings') }}" @class([ "flex items-center gap-x-2 py-2.5 px-4.5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary", "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('owner.settings') ])>
                     <x-ui.icon name="cog-6-tooth" @class(["size-5 shrink-0 group-hover:text-primary dark:group-hover:text-indigo-400", "text-primary dark:!text-indigo-400" => request()->routeIs('owner.settings')]) />
                     <span class="h-5 leading-5">
                         Settings
@@ -80,7 +98,7 @@
             <li class="group">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" @class([ "w-full flex items-center gap-x-2 py-2.5 px-5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary", "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('') ])>
+                    <button type="submit" @class([ "w-full flex items-center gap-x-2 py-2.5 px-4.5 text-sm font-medium leading-6 text-neutral-700 dark:text-neutral-200 border-l-4 border-transparent transition-all duration-200 ease-in-out group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 group-hover:text-primary dark:group-hover:text-indigo-400 group-hover:border-primary", "bg-indigo-100 dark:bg-indigo-900/40 text-primary dark:!text-indigo-400 !border-primary"=>request()->routeIs('') ])>
                         <x-ui.icon name="arrow-right-start-on-rectangle" @class(["size-5 shrink-0 group-hover:text-primary dark:group-hover:text-indigo-400", "text-primary dark:!text-indigo-400" => request()->routeIs('')]) />
                         <span class="h-5 leading-5">
                             Logout

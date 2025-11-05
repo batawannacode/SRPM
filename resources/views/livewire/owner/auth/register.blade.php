@@ -29,6 +29,12 @@
                 <x-ui.input required type="email" wire:model='form.email' placeholder="m@example.com" />
             </x-ui.field>
 
+            <!-- Phone Number -->
+            <x-ui.field>
+                <x-ui.label for="phone_number" text="{{ __('Phone Number') }}" />
+                <x-ui.input required type="text" wire:model='form.phone_number' placeholder="Phone Number" />
+            </x-ui.field>
+
             <!-- Password -->
             <x-ui.field>
                 <x-ui.label for="password" text="{{ __('Password') }}" />

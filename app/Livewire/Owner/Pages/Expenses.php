@@ -54,7 +54,8 @@ class Expenses extends Component
                 $s = trim($this->search);
                 $q->where(function ($inner) use ($s) {
                     $inner->where('type', 'like', "%{$s}%")
-                        ->orWhere('amount', 'like', "%{$s}%");
+                        ->orWhere('amount', 'like', "%{$s}%")
+                        ->orWhere('description', 'like', "%{$s}%");
 
                     if ($s === '') return;
 
@@ -78,7 +79,7 @@ class Expenses extends Component
                 });
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(7);
+            ->paginate(12);
     }
 
     public function editUtilityBill(int $id)
@@ -93,6 +94,7 @@ class Expenses extends Component
         $this->form['id'] = $expense->id;
         $this->form['type'] = $expense->type;
         $this->form['amount'] = $expense->amount;
+        $this->form['description'] = $expense->description ?? '';
         $this->isEditing = true;
         $this->dispatch('open-modal', id: 'expense-utility-bill-modal');
     }
@@ -114,7 +116,9 @@ class Expenses extends Component
 
     public function cancelModal()
     {
-        $this->reset('form');
+        $this->reset();
+        $this->resetErrorBag();
+        $this->resetValidation();
         $this->isEditing = false;
         $this->dispatch('close-modal', id: 'expense-utility-bill-modal');
     }
@@ -123,13 +127,17 @@ class Expenses extends Component
     {
         $this->validate([
             'form.type' => 'required|string|max:50',
-            'form.amount' => 'required|numeric|min:0',
+            'form.amount' => 'required|numeric|min:1',
+            'form.description' => $this->form['type'] === 'others' || $this->form['type'] === 'maintenance' ? 'required|string|max:255' : 'nullable|string|max:255',
         ],
         [
             'form.type.required' => 'Please select a type.',
             'form.amount.required' => 'Please enter an amount.',
             'form.amount.numeric' => 'The amount must be a number.',
             'form.amount.min' => 'The amount must be at least 1.',
+            'form.description.required' => 'Please enter a description.',
+            'form.description.string' => 'The description must be a valid string.',
+            'form.description.max' => 'The description may not be greater than 255 characters.',
         ]);
 
         $owner = auth()->user()->owner;
@@ -138,6 +146,7 @@ class Expenses extends Component
             'property_id' => $owner->active_property,
             'type' => $this->form['type'],
             'amount' => $this->form['amount'],
+            'description' => $this->form['description'] ?? null,
         ]);
 
         $this->isEditing = false;
@@ -155,12 +164,16 @@ class Expenses extends Component
         $this->validate([
             'form.type' => 'required|string|max:50',
             'form.amount' => 'required|numeric|min:0',
+            'form.description' => $this->form['type'] === 'others' || $this->form['type'] === 'maintenance' ? 'required|string|max:255' : 'nullable|string|max:255',
         ],
         [
             'form.type.required' => 'Please select a type.',
             'form.amount.required' => 'Please enter an amount.',
             'form.amount.numeric' => 'The amount must be a number.',
             'form.amount.min' => 'The amount must be at least 1.',
+            'form.description.required' => 'Please enter a description.',
+            'form.description.string' => 'The description must be a valid string.',
+            'form.description.max' => 'The description may not be greater than 255 characters.',
         ]);
 
         $owner = auth()->user()->owner;
@@ -174,6 +187,7 @@ class Expenses extends Component
         $expense->update([
             'type' => $this->form['type'],
             'amount' => $this->form['amount'],
+            'description' => $this->form['description'] ?? null,
         ]);
 
         $this->isEditing = false;
@@ -181,5 +195,20 @@ class Expenses extends Component
         $this->toastSuccess('Utility bill updated successfully!');
         $this->reset('form');
         $this->dispatch('close-modal', id: 'expense-utility-bill-modal');
+    }
+
+    public function updating(string $property): void
+    {
+        $shouldResetPage = in_array(
+            needle: $property,
+            haystack: [
+                'search'
+            ],
+            strict: true,
+        );
+
+        if ($shouldResetPage) {
+            $this->resetPage(); // Reset pagination to the first page
+        }
     }
 }

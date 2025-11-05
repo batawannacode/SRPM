@@ -21,6 +21,9 @@ class Lease extends Model
         'unit_id',
         'tenant_id',
         'status',
+        'start_date',
+        'end_date',
+        'rent_price',
     ];
 
     /**
@@ -29,11 +32,23 @@ class Lease extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        //
+        'rent_price' => 'decimal:2',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
     ];
 
+    public function terminate()
+    {
+        $this->status = 'terminated';
+        $this->save();
+
+        // Update unit status to vacant
+        $this->unit->status = 'vacant';
+        $this->unit->save();
+    }
+
     /**
-     * Get the user that owns the owner.
+     * Get the unit that owns the lease.
      */
     public function unit(): BelongsTo
     {
@@ -49,10 +64,26 @@ class Lease extends Model
     }
 
     /**
-     * Get the payments for the lease.
+     * Get the expected payments for the lease.
      */
-    public function payments(): HasMany
+    public function expectedPayments(): HasMany
     {
-        return $this->hasMany(Payment::class);
+        return $this->hasMany(ExpectedPayment::class);
+    }
+
+    /**
+     * Get the penalties for the lease.
+     */
+    public function penalties(): HasMany
+    {
+        return $this->hasMany(Penalty::class);
+    }
+
+    /**
+     * Get the documents for the lease.
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
     }
 }

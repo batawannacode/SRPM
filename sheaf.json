@@ -72,6 +72,15 @@
         },
         "badge": {
             "installationTime": 1761565988
+        },
+        "textarea": {
+            "installationTime": 1761833203
+        },
+        "breadcrumbs": {
+            "installationTime": 1761980353
+        },
+        "alerts": {
+            "installationTime": 1762321568
         }
     }
 }

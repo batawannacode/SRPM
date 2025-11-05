@@ -24,6 +24,9 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
             $table->enum('status', ['active', 'terminated', 'expired'])->default('active');
+            $table->decimal('rent_price', 65, 2)->default(0);
+            $table->date('start_date');
+            $table->date('end_date');
             $table->timestamps();
         });
     }

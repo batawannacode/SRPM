@@ -7,7 +7,7 @@
 'triggerClass' => ''
 ])
 
-<div class="flex flex-col justify-center items-center {{ $triggerClass }}" >
+<div class="flex justify-center items-center {{ $triggerClass }}" >
 
     <!-- Trigger Slot -->
     <div wire:click="$dispatch('open-modal', { id: 'confirm-delete-{{ $id }}' })">
@@ -16,8 +16,8 @@
 
     <!-- Modal -->
     <x-ui.modal id="confirm-delete-{{ $id }}" class="hidden" :closeByClickingAway="false" :closeButton="false">
-        <div class="p-5">
-            <h2 class="text-lg font-semibold text-red-600">{{ $title }}</h2>
+        <div>
+            <h2 class="text-lg font-semibold text-red-600 dark:text-red-500">{{ $title }}</h2>
             <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
                 {{ $message }}
             </p>

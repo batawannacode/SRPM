@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "juliomotol/laravel-auth-timeout": "^4.2",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
@@ -18,6 +19,8 @@
         "nunomaduro/essentials": "^1.0",
         "sheaf/cli": "^1.3",
         "spatie/laravel-permission": "^6.21",
+        "spatie/livewire-filepond": "^1.5",
+        "vish4395/laravel-file-viewer": "^1.0",
         "wireui/heroicons": "^2.9",
         "wireui/phosphoricons": "^2.4"
     },

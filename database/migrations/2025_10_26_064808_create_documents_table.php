@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Lease;
-use App\Models\Tenant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,10 +16,6 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Lease::class, 'lease_id')
                 ->constrained('leases')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-            $table->foreignIdFor(Tenant::class, 'tenant_id')
-                ->constrained('tenants')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
             $table->string('file_name');

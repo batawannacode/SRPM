@@ -43,13 +43,7 @@
                         </x-slot:button>
                         <x-slot:menu>
                             <x-ui.dropdown.item wire:click="editMethod({{ $method->id }})">Edit</x-ui.dropdown.item>
-                            <x-ui.dropdown.item wire:click="">
-                                <x-ui.modal.confirm-delete title="Delete Payment Method" message="Are you sure you want to delete this payment method? This action cannot be undone." triggerClass="justify-start! item-start!" :id="$method->id" wire:click="deletePaymentMethod({{ $method->id }})">
-                                    <x-slot:trigger>
-                                            Delete
-                                    </x-slot:trigger>
-                                </x-ui.modal.confirm-delete>
-                            </x-ui.dropdown.item>
+                            <x-ui.dropdown.item wire:click="deleteMethod({{ $method->id }})">Delete</x-ui.dropdown.item>
                         </x-slot:menu>
                     </x-ui.dropdown>
                 </div>
