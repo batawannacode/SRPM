@@ -17,7 +17,7 @@ class Penalty extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'lease_id',
+        'expected_payment_id',
         'due_date',
         'amount',
         'reason',
@@ -31,6 +31,7 @@ class Penalty extends Model
      */
     protected $casts = [
         'due_date' => 'datetime',
+        'amount' => 'decimal:2',
     ];
 
     /**
@@ -39,5 +40,13 @@ class Penalty extends Model
     public function lease(): BelongsTo
     {
         return $this->belongsTo(Lease::class);
+    }
+
+    /**
+     * Get the expected payment that owns the payment.
+     */
+    public function expectedPayment(): BelongsTo
+    {
+        return $this->belongsTo(ExpectedPayment::class);
     }
 }

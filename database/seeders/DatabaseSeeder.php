@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Lease, Payment, ExpectedPayment, Receipt, Penalty, Document, Unit, Expense, Notification, Property, Tenant, Owner, User, Request as MaintenanceRequest};
+use App\Models\{Lease, Payment, ExpectedPayment, Receipt, Penalty, Document, Unit, Expense, Notification, Property, Tenant, Owner, PaymentRule, User, Request as MaintenanceRequest};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Seeder;
@@ -70,6 +70,13 @@ class DatabaseSeeder extends Seeder
         foreach ($properties as $property) {
             $unitCount = $property->total_units;
 
+            PaymentRule::create([
+                'property_id' => $property->id,
+                'grace_period_days' => 5,
+                'penalty_type' => 'fixed',
+                'penalty_value' => 500,
+            ]);
+
             for ($u = 1; $u <= $unitCount; $u++) {
                 $unit = Unit::create([
                     'property_id' => $property->id,
@@ -113,10 +120,41 @@ class DatabaseSeeder extends Seeder
                             'status' => 'unpaid',
                         ]);
 
+                        // === PENALTIES (optional) ===
+                        if (rand(1, 10) <= 5) {
+                            Penalty::create([
+                                'expected_payment_id' => $expectedPayment->id,
+                                'due_date' => $expectedDate,
+                                'amount' => rand(200, 800),
+                                'reason' => 'Late rent payment',
+                                'is_paid' => rand(0, 1),
+                            ]);
+                        }
+
                         // Randomly decide if tenant paid for this month
                         $isPaid = rand(0, 1);
 
                         if ($isPaid) {
+                            $sourceProof = 'payments/sample.jpg';
+
+                            // Define lease-specific folder
+                            $folder = 'payments/lease_' . $lease->id;
+                            Storage::disk('public')->makeDirectory($folder);
+
+                            // Create 1 proof images
+                            $proofPaths = [];
+
+                            $filename = 'proof_' . $i . '_' . Str::uuid() . '.jpg';
+                            $destination = $folder . '/' . $filename;
+
+                            if (Storage::disk('public')->exists($sourceProof)) {
+                                Storage::disk('public')->copy($sourceProof, $destination);
+                            } else {
+                                throw new \Exception("Sample proof image not found: {$sourceProof}");
+                            }
+
+                            $proofPaths[] = $destination;
+
                             $payment = Payment::create([
                                 'expected_payment_id' => $expectedPayment->id,
                                 'amount' => $lease->rent_price,
@@ -124,10 +162,10 @@ class DatabaseSeeder extends Seeder
                                 'account_name' => "{$tenant->user->first_name} {$tenant->user->last_name}",
                                 'account_number' => str_pad(rand(100000000, 999999999), 10, '0'),
                                 'reference_number' => strtoupper(Str::random(8)),
-                                'proof' => 'proofs/' . Str::uuid() . '.jpg',
+                                'proof' => $proofPaths, // ✅ directly assign array
                             ]);
 
-                            // Update expected payment status to paid
+                            // Update expected payment status
                             $expectedPayment->update(['status' => 'paid']);
 
                             // Optionally create receipt
@@ -139,17 +177,6 @@ class DatabaseSeeder extends Seeder
                         }
 
                         $current->addMonth();
-                    }
-
-                    // === PENALTIES (optional) ===
-                    if (rand(1, 10) <= 5) {
-                        Penalty::create([
-                            'lease_id' => $lease->id,
-                            'due_date' => Carbon::now()->subDays(rand(5, 15)),
-                            'amount' => rand(200, 800),
-                            'reason' => 'Late rent payment',
-                            'is_paid' => rand(0, 1),
-                        ]);
                     }
 
                     // === DOCUMENT ===
@@ -193,7 +220,7 @@ class DatabaseSeeder extends Seeder
             MaintenanceRequest::create([
                 'unit_id' => $unit->id,
                 'tenant_id' => $tenant->id,
-                'type' => rand(0, 1) ? 'maintenance' : 'complaint',
+                'type' => ['maintenance', 'complaint', 'others'][rand(0, 2)],
                 'description' => ['Leaking faucet', 'Broken window', 'Aircon not cooling', 'Noisy neighbors'][rand(0, 3)],
                 'status' => ['pending', 'in_progress', 'completed'][rand(0, 2)],
             ]);

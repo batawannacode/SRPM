@@ -10,14 +10,14 @@
                 sidebarOpen: false,
             }">
             <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
-            <x-owner.hidden-sidebar />
+            <x-tenant.hidden-sidebar />
 
             <!-- Static sidebar for desktop -->
-            <x-owner.sidebar />
+            <x-tenant.sidebar />
 
-            <div class="transition-all duration-200 ease-in-out pl-0 lg:pl-64">
+            <div class="transition-all duration-200 ease-in-out pl-0 lg:pl-60">
                 {{-- Header --}}
-                <x-owner.header :title="$title" />
+                <x-tenant.header :title="$title" />
                 {{-- Content --}}
                 <main class="relative md:p-8 p-4 overflow-y-auto scroll-smooth w-full h-[calc(100vh-70px)]">
                     {{ $slot }}

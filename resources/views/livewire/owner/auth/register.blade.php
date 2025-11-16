@@ -72,9 +72,11 @@
         </div>
 
         @if ($errors->any())
-        @foreach($errors->all() as $error)
-        <x-ui.error class="text-xs !mt-0" :messages="$error" />
-        @endforeach
+        <div class="text-start">
+            @foreach($errors->all() as $error)
+            <x-ui.error class="text-xs" :messages="$error" />
+            @endforeach
+        </div>
         @endif
 
         <x-ui.button type="submit" color="emerald" class="!py-5.5">Register Owner Account</x-ui.button>

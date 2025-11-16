@@ -23,9 +23,10 @@ return new class extends Migration
                 ->constrained('tenants')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->enum('type', ['maintenance', 'complaint'])->default('maintenance');
+            $table->enum('type', ['maintenance', 'complaint', 'others'])->default('maintenance');
             $table->text('description');
-            $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
+            $table->enum('status', ['pending', 'in_progress', 'completed','rejected'])->default('pending');
+            $table->json('image_path')->nullable();
             $table->timestamps();
         });
     }

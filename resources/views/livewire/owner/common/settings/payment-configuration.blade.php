@@ -8,8 +8,12 @@
     </div>
 
     {{-- Header --}}
-    <div class="flex items-center justify-between mb-6">
-        <h2 class="text-lg font-semibold text-neutral-800 dark:text-neutral-50">Payment Methods</h2>
+    <div class="flex items-center justify-between gap-5 mb-6">
+        <p class="text-sm text-neutral-600 dark:text-neutral-400 mr-4">
+            This payment method is used as the default billing source for all properties
+            <br>
+             the user manages, unless a property explicitly overrides it.
+        </p>
         <x-ui.button color="emerald" icon="plus" wire:click="$dispatch('open-modal', { id: 'payment-method-modal' })">
             Add Payment Method
         </x-ui.button>
@@ -72,16 +76,16 @@
             {{-- QR Upload --}}
              <div class="flex items-center gap-4">
                 @if ($form->image)
-                <img src="{{ $form->image->temporaryUrl() }}" class=" h-80 w-full object-cover rounded-md border" />
+                <img src="{{ $form->image->temporaryUrl() }}" class="max-h-[600px] h-auto w-full object-contain rounded-md border" />
                 @elseif ($form->image_path)
                 {{-- Existing image from DB --}}
-                <img src="{{ Storage::url($form->image_path) }}" class="h-80 w-full object-cover rounded-md border" />
+                <img src="{{ Storage::url($form->image_path) }}" class="max-h-[600px] h-auto w-full object-contain rounded-md border" />
                 @endif
              </div>
             <x-ui.field>
                 <x-ui.label text="QR Code Image" />
                 <label for="qr_code_image">
-                    <div class="h-10 text-sm flex items-center justify-center text-white font-medium bg-emerald-500 hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:bg-emerald-600 border border-emerald-600 rounded-lg shadow-xs duration-200 ease-in-out">
+                    <div class="h-10 text-sm cursor-pointer flex items-center justify-center text-white font-medium bg-emerald-500 hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:bg-emerald-600 border border-emerald-600 rounded-lg shadow-xs duration-200 ease-in-out">
                         <input type="file" id="qr_code_image" wire:model.live="form.image" accept="image/*" class="hidden" />
                         <span>Upload QR Code</span>
                     </div>

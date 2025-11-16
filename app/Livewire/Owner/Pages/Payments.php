@@ -2,7 +2,8 @@
 
 namespace App\Livewire\Owner\Pages;
 
-use App\Models\Payment;
+use App\Models\Tenant;
+use App\Models\ExpectedPayment;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Computed;
 use Livewire\WithPagination;
@@ -13,17 +14,38 @@ use App\Livewire\Concerns\HasToast;
 class Payments extends Component
 {
     use HasToast, WithPagination;
+    public string $search = '';
 
     #[Computed]
-    public function payments()
+    public function tenants()
     {
-        // Step 1: Get latest payment ID for each tenant using subquery (no DB::raw)
-        $latestPayments = Payment::selectRaw('MAX(id) as id')
-            ->groupBy('tenant_id');
+        $activePropertyId = auth()->user()->owner->active_property;
+        $search = trim($this->search);
 
-        // Step 2: Fetch full payment records for those latest IDs
-        return Payment::whereIn('id', $latestPayments)
-            ->orderByDesc('payment_date')
+        return Tenant::query()
+            ->whereHas('leases.unit', function ($query) use ($activePropertyId) {
+                $query->where('property_id', $activePropertyId);
+            })
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('user', function ($uq) use ($search) {
+                    $uq->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
+                });
+            })
+            ->orderBy('id')
             ->paginate(12);
+    }
+    public function updating(string $property): void
+    {
+        $shouldResetPage = in_array(
+            needle: $property,
+            haystack: [
+                'search'
+            ],
+            strict: true,
+        );
+
+        if ($shouldResetPage) {
+            $this->resetPage(); // Reset pagination to the first page
+        }
     }
 }

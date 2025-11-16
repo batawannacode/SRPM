@@ -13,6 +13,7 @@
             <x-ui.tab.group class="justify-start">
                 <x-ui.tab label="Account" name="account" />
                 <x-ui.tab label="Payment Methods" name="payment" />
+                <x-ui.tab label="Payment Rules" name="rules" />
             </x-ui.tab.group>
         </x-ui.tabs>
     </div>

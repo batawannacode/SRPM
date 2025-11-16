@@ -19,19 +19,17 @@ class Login extends Component
     public function submit(): void
     {
         if (! $this->form->submit()) {
-            $this->toastError('Invalid email or password.');
+            // Show toast only if no specific error message is already added
+            if (! $this->form->getErrorBag()->has('email')) {
+                $this->toastError('Invalid email or password.');
+            }
             return;
         }
-        // Regenerate session for security
-        Session::regenerate();
 
         Toast::success('Welcome back! You have successfully logged in.');
 
         // Redirect to dashboard
-        $this->redirectIntended(
-            default: route('owner.dashboard', absolute: false),
-            navigate: true
-        );
+        $this->redirect(route('owner.dashboard', absolute: false), navigate: true);
     }
 
 }

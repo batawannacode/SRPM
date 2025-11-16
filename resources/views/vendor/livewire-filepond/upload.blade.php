@@ -6,6 +6,7 @@ $isCustomPlaceholder = isset($placeholder);
     'multiple' => false,
     'required' => false,
     'disabled' => false,
+    'accept' => '*/*',
     'placeholder' => __('Drag & Drop your files, images or <span class="filepond--label-action"> Browse </span>'),
 ])
 
@@ -116,5 +117,5 @@ $pondLocalizations = __('livewire-filepond::filepond');
       });
     }"
 >
-    <input type="file" x-ref="input">
+    <input type="file" accept="{{ $accept }}" x-ref="input">
 </div>

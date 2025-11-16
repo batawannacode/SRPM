@@ -75,6 +75,7 @@
      <div>
          {{ $this->propertyLeases->links() }}
      </div>
+
      {{-- === Add Lease Modal === --}}
      <x-ui.modal id="add-lease-modal" heading="Add New Lease" description="Add a new Lease for a property" :closeByClickingAway="false" :closeButton="false" width="xl" slideover sticky-header>
         <form wire:submit.prevent="addLease">
@@ -92,7 +93,10 @@
                 <!-- Select Tenant -->
                 <x-ui.field>
                     <x-ui.label for="tenant" text="Tenant" />
-                    <x-ui.description>Select or search for new tenant</x-ui.description>
+                    <div class="flex items-center justify-between mb-2">
+                        <x-ui.description>Select or search for new tenant</x-ui.description>
+                        <x-ui.button icon="ps:arrows-clockwise" size="sm" variant="ghost" wire:click="$refresh" class="!p-1.5 text-xs" />
+                    </div>
                     <x-ui.select id="tenant" triggerClass="!p-3" searchable clearable class="text-sm" wire:model="form.tenant" placeholder="Select tenant..">
                         @foreach($this->tenants as $tenant)
                             <x-ui.select.option value="[{{ $tenant->user->full_name }},{{ $tenant->id }}]">{{ $tenant->user->full_name }}</x-ui.select.option>
@@ -119,7 +123,7 @@
                     <x-ui.description>Upload the lease documents for the selected unit and tenant (PDF, DOCX, JPG & PNG)</x-ui.description>
                     <x-filepond::upload
                         :max-files="5"
-                        {{-- :required="true" --}}
+                        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png"
                         :multiple="true"
                         wire:model="form.lease_documents"
                     />
@@ -153,5 +157,4 @@
             </div>
         </form>
      </x-ui.modal>
-
 </div>

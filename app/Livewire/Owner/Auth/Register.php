@@ -29,9 +29,7 @@ class Register extends Component
 
         Toast::success('You have successfully registered!');
 
-        $this->redirectIntended(
-            default: route('owner.dashboard', absolute: false),
-            navigate: true
-        );
+        // Redirect to dashboard
+        $this->redirect(route('owner.dashboard', absolute: false), navigate: true);
     }
 }

@@ -42,7 +42,7 @@ class SelectProperties extends Component
             $this->owner->update(['active_property' => $value]);
             Toast::success('Successfully Switched to your property!');
             // Refresh the page
-            return redirect(request()->header('Referer') ?? route('owner.dashboard'));
+            return redirect(route('owner.dashboard'));
         }
     }
 }

@@ -43,4 +43,12 @@ class ExpectedPayment extends Model
     {
         return $this->hasOne(Payment::class);
     }
+
+    /**
+     * Get the penalties for the expected payment.
+     */
+    public function penalty(): HasOne
+    {
+        return $this->hasOne(Penalty::class);
+    }
 }

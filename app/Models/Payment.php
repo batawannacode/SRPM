@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
@@ -33,7 +35,42 @@ class Payment extends Model
      */
     protected $casts = [
         'amount' => 'decimal:2',
+        'proof' => 'array',
     ];
+
+    public function getProofPreviewUrlsAttribute(): array
+    {
+        if (!is_array($this->proof)) {
+            return [];
+        }
+
+        return collect($this->proof)->map(function ($path) {
+            $encrypted = Crypt::encryptString($path);
+
+            return URL::temporarySignedRoute(
+                'owner.file.preview',
+                now()->addMinutes(5),
+                ['encrypted' => base64_encode($encrypted)]
+            );
+        })->toArray();
+    }
+
+    public function getTenantProofPreviewUrlsAttribute(): array
+    {
+        if (!is_array($this->proof)) {
+            return [];
+        }
+
+        return collect($this->proof)->map(function ($path) {
+            $encrypted = Crypt::encryptString($path);
+
+            return URL::temporarySignedRoute(
+                'tenant.file.preview',
+                now()->addMinutes(5),
+                ['encrypted' => base64_encode($encrypted)]
+            );
+        })->toArray();
+    }
 
     /**
      * Get the expected payment that owns the payment.

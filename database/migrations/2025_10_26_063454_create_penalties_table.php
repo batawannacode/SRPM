@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Lease;
+use App\Models\ExpectedPayment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,8 +14,8 @@ return new class extends Migration
     {
         Schema::create('penalties', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Lease::class, 'lease_id')
-                ->constrained('leases')
+            $table->foreignIdFor(ExpectedPayment::class, 'expected_payment_id')
+                ->constrained('expected_payments')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
             $table->date('due_date');

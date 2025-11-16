@@ -21,6 +21,16 @@ class Tenant extends Model
         'user_id',
     ];
 
+    public function latestPaidPayment()
+    {
+        return ExpectedPayment::query()
+            ->whereHas('lease', fn ($q) => $q->where('tenant_id', $this->id))
+            ->where('status', 'paid')
+            ->with('payment')
+            ->latest('payment_date')
+            ->first();
+    }
+
     /**
      * Get the user that owns the owner.
      */

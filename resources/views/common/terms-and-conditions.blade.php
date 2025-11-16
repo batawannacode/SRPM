@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('Terms and Conditions')">
+<x-layouts.common :title="__('Terms and Conditions')">
     <a href="{{ route('home') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
         <span class="flex items-center justify-center">
             <x-app-logo-icon class="size-28 fill-current rounded-full text-black dark:text-white" />
@@ -72,11 +72,11 @@
         <h2 class="text-2xl font-semibold text-neutral-800 mt-8 mb-3">9. Contact Information</h2>
         <p class="text-neutral-600 mb-4">
             For any questions or concerns regarding these terms, please contact our support team at
-            <a href="mailto:support@leaseman.com" class="text-indigo-600 hover:underline">support@leaseman.com</a>.
+            <a href="mailto:support@leaseman.com" class="text-indigo-600 hover:underline">support@srpm.com</a>.
         </p>
 
         <p class="text-neutral-500 text-sm mt-12">
             © {{ date('Y') }} Smart Rental Property Management. All rights reserved.
         </p>
     </div>
-</x-layouts.app>
+</x-layouts.common>

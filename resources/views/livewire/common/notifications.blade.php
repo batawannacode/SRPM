@@ -3,7 +3,7 @@
     <div class="relative">
         <x-ui.button x-on:click="$modal.open('notifications')" variant="soft" icon="ps:bell" class="text-neutral-600 dark:text-neutral-200 hover:bg-indigo-100 dark:hover:bg-neutral-700" />
         @if ($this->notifications->where(fn($query) => !$query->is_read)?->count() > 0)
-        <span class="absolute right-1 top-1">
+        <span class="absolute right-1.5 top-1.5">
             <span class="relative flex size-3">
                 <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
                 <span class="relative inline-flex size-3 rounded-full bg-red-500"></span>
@@ -61,7 +61,7 @@
             $not_read = '';
             }
             @endphp
-            <div class="group cursor-pointer w-full flex items-center justify-between px-2 py-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700/60 transition text-start" wire:click="markAsRead({{ $notif->id }})">
+            <div class="group cursor-pointer w-full flex items-center justify-between gap-3 px-2 py-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700/60 transition text-start" wire:click="markAsRead({{ $notif->id }})">
                 {{-- LEFT: ICON + DETAILS --}}
                 <div class="flex items-center gap-3">
                     {{-- ICON --}}

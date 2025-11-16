@@ -9,6 +9,7 @@ use App\Models\ExpectedPayment;
 use App\Models\Notification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Livewire\Form;
 
@@ -70,6 +71,9 @@ class LeaseForm extends Form
         DB::beginTransaction();
 
         try {
+            // Call the command for calculating the penalties
+            Artisan::call('app:check-lease-payments');
+
             $tenant_id = $this->extractIdFromString($this->tenant);
             $unit_id = $this->extractIdFromString($this->unit);
 
@@ -258,6 +262,9 @@ class LeaseForm extends Form
             $notificationsCreated = 0;
 
             foreach ($lease->expectedPayments as $payment) {
+                $paymentRule = $lease->unit->property->paymentRule ?? null;
+                $gracePeriod = $paymentRule->grace_period_days ?? 3;
+
                 if ($payment->status === 'paid') {
                     continue;
                 }
@@ -267,9 +274,15 @@ class LeaseForm extends Form
 
                 // Check if near due (within next 5 days) or already past due
                 if ($daysLeft >= 0 && $daysLeft <= 5) {
-                    $message = "Your rent payment is due on {$paymentDate->format('M d, Y')}. Please make sure to pay on time.";
-                } elseif ($daysLeft < 0) {
-                    $message = "Your rent payment was due on {$paymentDate->format('M d, Y')}. Please settle it as soon as possible.";
+                    $message = "Your Payment is on {$paymentDate->format('M d, Y')}, Please pay on time to avoid penalties.";
+                } elseif ($daysLeft < 0 && abs($daysLeft) <= $gracePeriod) {
+                    $message = "Your Payment is on {$paymentDate->format('M d, Y')}, Please pay within the grace period to avoid the penalties.";
+                } else if ($daysLeft < -$gracePeriod && $paymentRule) {
+                    // Compute penalty
+                    $amount = $paymentRule->penalty_type === 'fixed'
+                        ? $paymentRule->penalty_value
+                        : $lease->rent_price * ($paymentRule->penalty_value / 100);
+                    $message = "You have been penalized for late payment with amount of ₱" . number_format($amount, 2) . ". Please pay the rent so it will not add up to next rent!!";
                 } else {
                     continue; // Not near or past due yet
                 }

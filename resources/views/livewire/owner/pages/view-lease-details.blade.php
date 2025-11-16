@@ -62,6 +62,14 @@
                     <span class="font-medium">Rent Price:</span>
                     <span class="font-semibold text-primary truncate">₱{{ number_format($lease->rent_price, 2) }}</span>
                 </p>
+                <p class="grid grid-cols-2 place-items-start items-center truncate gap-2">
+                    <span class="font-medium">Penalty Value:</span>
+                    @if($lease->unit->property->paymentRule->penalty_type === 'fixed')
+                        <span class="font-semibold text-primary truncate">₱{{ number_format($lease->unit->property->paymentRule->penalty_value, 2) }}</span>
+                    @else
+                        <span class="font-semibold text-primary truncate">{{ $lease->unit->property->paymentRule->penalty_value }}%</span>
+                    @endif
+                </p>
             </div>
         </x-ui.card>
 
@@ -104,7 +112,7 @@
                     <span class="font-medium">Full Name:</span>
                     <span class="truncate">{{ $lease->tenant->user->full_name ?? '—' }}</span>
                 </p>
-                <p class="grid grid-cols-2 place-items-start items-center truncate gap-2">
+                <p class="grid grid-cols-2 place-items-start items-center gap-2">
                     <span class="font-medium">Email:</span>
                     <span class="truncate">{{ $lease->tenant->user->email ?? '—' }}</span>
                 </p>

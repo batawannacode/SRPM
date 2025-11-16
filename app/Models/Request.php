@@ -21,7 +21,12 @@ class Request extends Model
         'tenant_id',
         'type',
         'description',
+        'image_path',
         'status',
+    ];
+
+    protected $casts = [
+        'image_path' => 'array',
     ];
 
     /**

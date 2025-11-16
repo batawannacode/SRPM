@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('account_name');
             $table->string('account_number');
             $table->string('reference_number');
-            $table->string('proof');
+            $table->json('proof');
             $table->timestamps();
         });
     }

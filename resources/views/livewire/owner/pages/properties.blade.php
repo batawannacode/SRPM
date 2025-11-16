@@ -31,7 +31,6 @@
                         <th class="p-4 text-left whitespace-nowrap">Occupied</th>
                         <th class="p-4 text-left whitespace-nowrap">Maintenance</th>
                         <th class="p-4 text-left whitespace-nowrap">Vacant</th>
-                        <th class="p-4 text-left whitespace-nowrap">Total Due Payments</th>
                         <th class="p-4 text-center">Action</th>
                     </tr>
                 </thead>
@@ -79,9 +78,6 @@
                         </td>
                         <td class="px-4 py-3 text-center whitespace-nowrap text-neutral-500 dark:text-neutral-400">
                             {{ $property['vacancy']['vacant'] }}
-                        </td>
-                        <td class="px-4 py-3 text-left whitespace-nowrap text-rose-600 dark:text-rose-400">
-                            ₱ {{ number_format($property['due'], 2) }}
                         </td>
                         <td class="px-4 py-3 text-center">
                            <div class="flex items-center gap-1">

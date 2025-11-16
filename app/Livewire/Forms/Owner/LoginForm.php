@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Forms\Owner;
 
+use App\Models\User;
+use App\Enums\Role;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -22,7 +25,7 @@ class LoginForm extends Form
         ];
     }
 
-    /**
+   /**
      * Attempt to authenticate the user.
      *
      * @return bool
@@ -33,21 +36,51 @@ class LoginForm extends Form
 
         $this->checkRateLimit();
 
-        // Attempt login
-        if (Auth::attempt(
-            ['email' => $this->email, 'password' => $this->password],
-            $this->remember
-        )) {
-            // Clear rate limit on successful login
-            RateLimiter::clear($this->throttleKey());
-            return true;
+        // Validate user manually
+        $user = $this->validateUser($this->email, $this->password, roles: [Role::Owner->value]);
+
+        if (! $user) {
+            // Increment failed attempts if validation fails
+            RateLimiter::hit($this->throttleKey(), 60); // 60 seconds lockout
+            return false;
         }
 
-        // Increment failed attempts
-        RateLimiter::hit($this->throttleKey(), 60); // Lockout duration = 60 seconds
+        // Log in the user
+        Auth::login($user, $this->remember);
 
-        $this->addError('email', 'Invalid email or password.');
-        return false;
+        // Regenerate session for security
+        session()->regenerate();
+
+        // Clear rate limiter on success
+        RateLimiter::clear($this->throttleKey());
+
+        return true;
+    }
+
+
+    /**
+     * Validate the user credentials and role.
+     */
+    private function validateUser(string $email, string $password, array $roles): false|User
+    {
+        $user = User::firstWhere('email', $email);
+
+        if (! $user) {
+            $this->addError('email', 'No account found with this email address.');
+            return false;
+        }
+
+        if (! Hash::check($password, $user->password)) {
+            $this->addError('password', 'Incorrect password.');
+            return false;
+        }
+
+        if (! $user->hasAnyRole($roles)) {
+            $this->addError('email', 'You are not authorized to access this area.');
+            return false;
+        }
+
+        return $user;
     }
 
      /**

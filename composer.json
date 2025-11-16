@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^3.1",
         "juliomotol/laravel-auth-timeout": "^4.2",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
@@ -54,6 +55,9 @@
             "@php artisan migrate --force",
             "npm install",
             "npm run build"
+        ],
+        "pre-dev": [
+            "Composer\\Config::disableProcessTimeout"
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",

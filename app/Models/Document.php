@@ -35,6 +35,17 @@ class Document extends Model
         );
     }
 
+    public function getTenantTemporaryPreviewUrlAttribute(): string
+    {
+        $encrypted = Crypt::encryptString($this->file_path);
+
+        return URL::temporarySignedRoute(
+            'tenant.file.preview',
+            now()->addMinutes(5),
+            ['encrypted' => base64_encode($encrypted)]
+        );
+    }
+
     /**
      * Get the lease that owns the document.
      */

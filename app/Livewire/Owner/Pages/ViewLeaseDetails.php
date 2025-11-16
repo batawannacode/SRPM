@@ -5,6 +5,7 @@ namespace App\Livewire\Owner\Pages;
 use App\Models\Lease;
 use App\Models\Unit;
 use App\Models\Tenant;
+use App\Models\Penalty;
 use App\Livewire\Concerns\HasToast;
 use App\Livewire\Forms\Owner\LeaseForm;
 use Carbon\Carbon;
@@ -81,9 +82,12 @@ class ViewLeaseDetails extends Component
     #[Computed]
     public function penalties()
     {
-        return $this->lease->penalties()
+        return Penalty::query()
+            ->whereHas('expectedPayment', function ($query) {
+                $query->where('lease_id', $this->lease->id);
+            })
             ->orderByDesc('due_date')
-            ->paginate(12, ['*'], 'penaltyPage'); // 👈 custom page name
+            ->paginate(12, ['*'], 'penaltyPage');
     }
 
     #[Computed]

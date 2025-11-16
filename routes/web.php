@@ -6,8 +6,15 @@ use App\Livewire\Actions\Logout;
 // Tenant
 use App\Livewire\Tenant\Auth\Login as TenantLogin;
 use App\Livewire\Tenant\Auth\Register as TenantRegister;
+use App\Livewire\Tenant\Pages\Dashboard as TenantDashboard;
+use App\Livewire\Tenant\Common\Settings as TenantSettings;
+use App\Livewire\Tenant\Pages\Leases as TenantLeases;
+use App\Livewire\Tenant\Pages\ViewLeaseDetails as TenantViewLeaseDetails;
+use App\Livewire\Tenant\Pages\Payments as TenantPayments;
+use App\Livewire\Tenant\Pages\Requests as TenantRequests;
 // Owner
-use App\Livewire\Owner\Common\Settings;
+use App\Http\Controllers\FilePreviewController;
+use App\Livewire\Owner\Common\Settings as OwnerSettings;
 use App\Livewire\Owner\Auth\Login as OwnerLogin;
 use App\Livewire\Owner\Auth\Register as OwnerRegister;
 use App\Livewire\Owner\Pages\Dashboard as OwnerDashboard;
@@ -18,7 +25,7 @@ use App\Livewire\Owner\Pages\Expenses;
 use App\Livewire\Owner\Pages\Properties as OwnerProperties;
 use App\Livewire\Owner\Pages\Payments as OwnerPayments;
 use App\Livewire\Owner\Pages\Requests as OwnerRequests;
-use App\Http\Controllers\FilePreviewController;
+use App\Livewire\Owner\Pages\ViewTenantPayments;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -113,6 +120,9 @@ Route::group([
         // PAYMENTS
         Route::get('payments', OwnerPayments::class)
             ->name('payments');
+        // TENANT PAYMENTS
+        Route::get('payments/tenant/{tenant}', ViewTenantPayments::class)
+            ->name('tenant.payments');
         // REQUESTS
         Route::get('requests', OwnerRequests::class)
             ->name('requests');
@@ -120,7 +130,7 @@ Route::group([
         Route::get('properties', OwnerProperties::class)
             ->name('properties');
         // SETTINGS
-        Route::get('settings', Settings::class)
+        Route::get('settings', action: OwnerSettings::class)
             ->name('settings');
 
         // FILE PREVIEW
@@ -128,16 +138,6 @@ Route::group([
             ->where('encrypted', '.*')
             ->middleware('signed')
             ->name('file.preview');
-
-        /*
-        *-----------------------------------------
-        *              HEADER ROUTES
-        *-----------------------------------------
-        */
-
-        // PROFILE
-        // Route::get('profile', Profile::class)
-        //     ->name('profile');
     });
 });
 
@@ -150,7 +150,7 @@ Route::group([
 */
 
 Route::group([
-    'middleware' => 'web',
+    'middleware' => ['web'],
     'prefix' => 'tenant',
     'as' => 'tenant.',
 ], function () {
@@ -189,17 +189,32 @@ Route::group([
         */
 
         // DASHBOARD
-        // Route::get('dashboard', TenantDashboard::class)
-        //     ->name('dashboard');
+        Route::get('dashboard', TenantDashboard::class)
+            ->name('dashboard');
 
-        /*
-        *-----------------------------------------
-        *              HEADER ROUTES
-        *-----------------------------------------
-        */
+        // LEASES
+        Route::get('leases', TenantLeases::class)
+            ->name('leases');
+        // LEASE DETAILS
+        Route::get('leases/{lease}', TenantViewLeaseDetails::class)
+            ->name('lease.details');
 
-        // PROFILE
-        // Route::get('profile', Profile::class)
-        //     ->name('profile');
+        // PAYMENTS
+        Route::get('payments', TenantPayments::class)
+            ->name('payments');
+
+        // REQUESTS
+        Route::get('requests', TenantRequests::class)
+            ->name('requests');
+
+        // SETTINGS
+        Route::get('settings', TenantSettings::class)
+            ->name('settings');
+
+        // FILE PREVIEW
+        Route::get('file-preview/{encrypted}', FilePreviewController::class)
+            ->where('encrypted', '.*')
+            ->middleware('signed')
+            ->name('file.preview');
     });
 });

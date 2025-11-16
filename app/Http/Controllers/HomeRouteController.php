@@ -20,10 +20,21 @@ final class HomeRouteController extends Controller
     public function __invoke(Request $request): RedirectResponse
     {
         $user = $request->user();
-        return match (true) {
-            $user->hasRole(Role::Owner->value) => to_route('owner.dashboard'),
-            $user->hasRole(Role::Tenant->value) => to_route('tenant.dashboard'),
-            default => redirect('/'),
-        };
+        // Not authenticated -> redirect home
+        if (! $user) {
+            return redirect('/');
+        }
+
+        // Authenticated -> route by role
+        if ($user->hasRole(Role::Owner->value)) {
+            return to_route('owner.dashboard');
+        }
+
+        if ($user->hasRole(Role::Tenant->value)) {
+            return to_route('tenant.dashboard');
+        }
+
+        // Authenticated but no matching role -> redirect home (or handle differently)
+        return redirect('/');
     }
 }
