@@ -8,6 +8,7 @@ use App\Models\Owner;
 use App\Models\User;
 use App\Models\Property;
 use App\Models\Unit;
+use App\Models\PaymentRule;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -111,6 +112,18 @@ class RegisterForm extends Form
                         'unit_number' => "Unit {$i}",
                     ])
                 );
+
+            /** 5️⃣ Create default payment rules for the property */
+            PaymentRule::firstOrCreate(
+                ['property_id' => $property->id],
+                [
+                    'grace_period_days' => 3,
+                    'penalty_type' => 'fixed',
+                    'penalty_value' => 1000.00,
+                    'auto_apply' => true,
+                    'notify_tenant' => true,
+                ]
+            );
 
             DB::commit();
 

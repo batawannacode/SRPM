@@ -101,39 +101,53 @@ class LeaseForm extends Form
             }
 
             // === EXPECTED PAYMENTS ===
-            $start = Carbon::parse($this->start_date);
-            $end = Carbon::parse($this->end_date);
+            $start = Carbon::parse($this->start_date)->startOfMonth();
+            $end = Carbon::parse($this->end_date)->endOfMonth();
 
-            // Condition 1: Check if both are full months
-            $isStartFull = $start->isSameDay($start->copy()->startOfMonth());
-            $isEndFull = $end->isSameDay($end->copy()->endOfMonth());
+            $current = $start->copy();
 
-            if ($isStartFull && $isEndFull) {
-                // Count all complete months
-                $months = $start->diffInMonths($end); // include end month
-                $current = $start->copy();
-
-                for ($i = 0; $i < $months; $i++) {
-                    $expectedDate = $current->copy()->endOfMonth();
-
-                    ExpectedPayment::create([
-                        'lease_id' => $lease->id,
-                        'payment_date' => $expectedDate,
-                        'status' => 'unpaid',
-                    ]);
-
-                    $current->addMonth();
-                }
-            } else {
-                // Condition 2: Partial months, treat as single 30-day month
-                $expectedDate = $end->copy()->endOfMonth();
-
+            while ($current <= $end) {
                 ExpectedPayment::create([
                     'lease_id' => $lease->id,
-                    'payment_date' => $expectedDate,
+                    'payment_date' => $current->copy()->endOfMonth(),
                     'status' => 'unpaid',
                 ]);
+
+                $current->addMonth();
             }
+            // $start = Carbon::parse($this->start_date);
+            // $end = Carbon::parse($this->end_date);
+
+            // // Condition 1: Check if both are full months
+            // $isStartFull = $start->isSameDay($start->copy()->startOfMonth());
+            // $isEndFull = $end->isSameDay($end->copy()->endOfMonth());
+
+            // if ($isStartFull && $isEndFull) {
+            //     // Count all complete months
+            //     $months = $start->diffInMonths($end); // include end month
+            //     $current = $start->copy();
+
+            //     for ($i = 0; $i < $months; $i++) {
+            //         $expectedDate = $current->copy()->endOfMonth();
+
+            //         ExpectedPayment::create([
+            //             'lease_id' => $lease->id,
+            //             'payment_date' => $expectedDate,
+            //             'status' => 'unpaid',
+            //         ]);
+
+            //         $current->addMonth();
+            //     }
+            // } else {
+            //     // Condition 2: Partial months, treat as single 30-day month
+            //     $expectedDate = $end->copy()->endOfMonth();
+
+            //     ExpectedPayment::create([
+            //         'lease_id' => $lease->id,
+            //         'payment_date' => $expectedDate,
+            //         'status' => 'unpaid',
+            //     ]);
+            // }
 
             DB::commit();
             return true;

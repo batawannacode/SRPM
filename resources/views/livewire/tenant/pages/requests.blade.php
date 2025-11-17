@@ -24,10 +24,9 @@
 
              <select wire:model.live="status" class="border border-neutral-200 dark:border-neutral-700 rounded-lg py-2.5 bg-white dark:bg-neutral-800 dark:text-white text-sm ">
                 <option value="">All</option>
-                <option value="pending">Pending</-ui.select.option>
+                <option value="pending">Pending </option>
                 <option value="in_progress">In Progress</option>
                 <option value="completed">Completed</option>
-                <option value="others">Others</option>
              </select>
          </div>
           <x-ui.button color="emerald" icon="plus" wire:click="$dispatch('open-modal', { id: 'request-modal' })">

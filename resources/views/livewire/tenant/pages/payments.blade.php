@@ -8,19 +8,19 @@
         </div>
     </div>
     {{-- Lease Selector --}}
-    @if(!empty($selectedLease))
+    @if(!empty($this->selectedLeaseModel))
     <div class="flex md:flex-row flex-col items-center justify-between gap-5">
         <div class="text-xl font-semibold text-neutral-800 dark:text-neutral-50 flex items-center sm:flex-row flex-col gap-2">
-             <x-ui.badge color="{{ $selectedLease->status === 'expired' ? 'amber' : ($selectedLease->status === 'active' ? 'emerald' : 'amber') }}">
-                 {{ ucfirst(strtolower($selectedLease->status)) }}
+             <x-ui.badge color="{{ $this->selectedLeaseModel->status === 'expired' ? 'amber' : ($this->selectedLeaseModel->status === 'active' ? 'emerald' : 'rose') }}">
+                 {{ ucfirst(strtolower($this->selectedLeaseModel->status)) }}
              </x-ui.badge>
-            <span>Lease #{{ $selectedLease->id }}</span>
+            <span>Lease #{{ $this->selectedLeaseModel->id }}</span>
              -
             <span>
-               {{ $selectedLease->unit->unit_number }}
+               {{ $this->selectedLeaseModel->unit->unit_number }}
             </span>
             <span class="text-lg">
-                ({{ $selectedLease->start_date->format('M d, Y') }} - {{ $selectedLease->end_date->format('M d, Y') }})
+                ({{ $this->selectedLeaseModel->start_date->format('M d, Y') }} - {{ $this->selectedLeaseModel->end_date->format('M d, Y') }})
             </span>
         </div>
 
@@ -230,7 +230,11 @@
                                     ₱{{ number_format($totalPayment, 2) }}
                                 </td>
                                 <td class="p-4">
-                                    <x-ui.button size="sm" icon="ps:hand-deposit" wire:click="pay({{ $expected->id }})">Pay</x-ui.button>
+                                    @if($expected->lease->status === 'active')
+                                        <x-ui.button size="sm" icon="ps:hand-deposit" wire:click="pay({{ $expected->id }})">Pay</x-ui.button>
+                                    @else
+                                        <span class="text-sm text-neutral-500">(Lease is not active)</span>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach

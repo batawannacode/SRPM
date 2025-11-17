@@ -13,7 +13,6 @@ return new class extends Migration
     public function up(): void
     {
         $this->defaultRolesAndPermissions();
-
     }
 
     private function defaultRolesAndPermissions(): void
@@ -22,6 +21,24 @@ return new class extends Migration
 
         foreach (App\Enums\Role::cases() as $role) {
             Spatie\Permission\Models\Role::findOrCreate($role->value);
+        }
+    }
+
+    private function makePaymentRules(): void
+    {
+        $properties = App\Models\Property::first();
+
+        foreach ($properties as $property) {
+            App\Models\PaymentRule::firstOrCreate(
+                ['property_id' => $property->id],
+                [
+                    'grace_period_days' => 3,
+                    'penalty_type' => 'fixed',
+                    'penalty_value' => 1000.00,
+                    'auto_apply' => true,
+                    'notify_tenant' => true,
+                ]
+            );
         }
     }
 };

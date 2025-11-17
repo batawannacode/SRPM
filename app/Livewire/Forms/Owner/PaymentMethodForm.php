@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
 use Livewire\Form;
 
-use function Laravel\Prompts\form;
-
 class PaymentMethodForm extends Form
 {
     use WithFileUploads;
@@ -67,7 +65,7 @@ class PaymentMethodForm extends Form
             PaymentMethod::updateOrCreate(
                 ['id' => $this->id],
                 [
-                    'owner_id' => auth()->id(),
+                    'owner_id' => auth()->user()->owner->id,
                     'type' => $this->name,
                     'account_name' => $this->account_name,
                     'account_number' => $this->account_number,

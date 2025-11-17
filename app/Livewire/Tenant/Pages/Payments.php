@@ -21,11 +21,11 @@ class Payments extends Component
     public PayForm $form;
     public ?ExpectedPayment $viewingPayment = null;
     public ?ExpectedPayment $selectedPayment = null;
-    public ?Lease $selectedLease = null;
+    public ?int $selectedLease = null;
 
     public function mount()
     {
-        $this->selectedLease = $this->activeLease();
+        $this->selectedLease = $this->activeLease()?->id;
     }
 
     #[Computed]
@@ -38,10 +38,17 @@ class Payments extends Component
     }
 
     #[Computed]
+    public function selectedLeaseModel()
+    {
+        return Lease::find($this->selectedLease);
+    }
+
+
+    #[Computed]
     public function paymentMethods()
     {
-        return $this->selectedLease
-            ? $this->selectedLease->unit->property->owner->paymentMethods
+        return $this->selectedLeaseModel
+            ? $this->selectedLeaseModel->unit->property->owner->paymentMethods
             : collect(); // return empty if lease is null
     }
 
@@ -77,7 +84,8 @@ class Payments extends Component
     public function getPaymentsByStatus(string $status)
     {
         return ExpectedPayment::whereHas('lease', function ($q) {
-                $q->where('tenant_id', Auth::user()->tenant->id);
+                $q->where('tenant_id', Auth::user()->tenant->id)
+                ->where('id', $this->selectedLease);
             })
             ->where('status', $status)
             ->get();

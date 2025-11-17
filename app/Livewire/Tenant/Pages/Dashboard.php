@@ -70,7 +70,8 @@ class Dashboard extends Component
     public function getPaymentsByStatus(string $status)
     {
         return ExpectedPayment::whereHas('lease', function ($q) {
-                $q->where('tenant_id', Auth::user()->tenant->id);
+                $q->where('tenant_id', Auth::user()->tenant->id)
+                ->where('status', 'active');
             })
             ->where('status', $status)
             ->get();

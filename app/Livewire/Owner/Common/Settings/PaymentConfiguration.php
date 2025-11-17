@@ -34,6 +34,7 @@ class PaymentConfiguration extends Component
         $this->form->save();
         $this->loadMethods();
         $this->cancelModal();
+        $this->isEditing = false;
         $this->toastSuccess('Payment method saved successfully.');
     }
 
