@@ -7,7 +7,7 @@
             </p>
         </div>
         {{-- Date Range Picker --}}
-        <div class=" flex item-center gap-5 w-full md:w-[500px]">
+        <div class=" flex item-center flex-col sm:flex-row gap-5 w-full md:w-[500px]">
             <x-ui.field>
                 <x-ui.label for="start_date" text="{{ __('Start Date') }}" />
                 <x-ui.input type="date" id="start_date" wire:model.live="startDate" clearable />
@@ -18,8 +18,8 @@
             </x-ui.field>
         </div>
     </div>
-    <div class="flex items-center justify-between gap-5 mb-6">
-         <div class="flex gap-3">
+    <div class="flex items-center justify-between flex-col sm:flex-row  gap-5 mb-6">
+         <div class="flex flex-col sm:flex-row  gap-3">
             <x-ui.input clearable wire:model.live="search" placeholder="Search..." class="max-w-sm" leftIcon="magnifying-glass" />
 
              <select wire:model.live="status" class="border border-neutral-200 dark:border-neutral-700 rounded-lg py-2.5 bg-white dark:bg-neutral-800 dark:text-white text-sm ">
@@ -153,7 +153,7 @@
         @if($selectedRequest)
         <div class="space-y-6 w-full">
             {{-- Tenant & Unit --}}
-            <div class="flex gap-5 w-full">
+            <div class="flex flex-wrap gap-5 w-full">
                 <div class="w-full">
                     <p class="text-xs text-neutral-500 uppercase">Unit Number</p>
                     <p class="text-base font-semibold text-neutral-800 dark:text-neutral-100">

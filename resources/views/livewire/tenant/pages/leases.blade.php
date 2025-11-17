@@ -7,7 +7,7 @@
             </p>
         </div>
         {{-- Date Range Picker --}}
-        <div class=" flex item-center gap-5 min-w-[500px]">
+        <div class=" flex item-center flex-col sm:flex-row gap-5 w-full sm:min-w-[500px]">
             <x-ui.field>
                 <x-ui.label for="start_date" text="{{ __('Start Date') }}" />
                 <x-ui.input type="date" id="start_date" wire:model.live="startDate" clearable />

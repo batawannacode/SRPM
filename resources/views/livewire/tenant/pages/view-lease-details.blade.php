@@ -112,7 +112,7 @@
 
     {{-- Lease Documents --}}
     <x-ui.card hoverless size="full" >
-        <div class="flex items-center justify-between gap-5 mb-5">
+        <div class="flex items-center justify-between flex-col sm:flex-row gap-5 mb-5">
             <h3 class="text-lg font-semibold text-neutral-800 dark:text-neutral-50 flex items-center gap-2">
                 <x-ui.icon name="ps:file-text" class="text-primary size-7" />
                 <span class="leading-7">

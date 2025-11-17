@@ -101,7 +101,7 @@
     {{-- Lease Info --}}
     <x-ui.card hoverless size="full">
         @if($lease)
-        <div class="flex items-start justify-between">
+        <div class="flex items-start justify-between gap-5">
             <div>
                 <div class="text-xl font-semibold dark:text-neutral-100 mt-1">
                     {{ $lease->unit->property->name ?? 'N/A' }} — {{ $lease->unit->unit_number ?? 'N/A' }}
